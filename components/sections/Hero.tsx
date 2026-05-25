@@ -45,7 +45,7 @@ export default function Hero() {
   );
 
   return (
-    <section ref={heroRef} className="relative min-h-[100dvh] flex items-center justify-center overflow-hidden mesh-bg">
+    <section ref={heroRef} className="relative min-h-[100dvh] flex items-center justify-center overflow-hidden mesh-bg w-full max-w-[100vw]">
       {/* Glowing orbs */}
       <div className="absolute top-1/4 left-1/4 w-72 h-72 rounded-full bg-[var(--accent-primary)] opacity-[0.04] blur-[100px] animate-float pointer-events-none" />
       <div

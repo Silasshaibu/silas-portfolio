@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Mail, MessageSquare, ExternalLink, Send, CheckCircle, AlertCircle } from 'lucide-react';
 import SectionLabel from '@/components/ui/SectionLabel';
-import Button from '@/components/ui/Button';
 import ScrollReveal from '@/components/animations/ScrollReveal';
 import type { ContactFormData } from '@/types';
 
@@ -78,7 +77,7 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" className="section-padding bg-[var(--bg-primary)] relative">
+    <section id="contact" className="section-padding bg-[var(--bg-primary)] relative overflow-hidden">
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full bg-[var(--accent-primary)] opacity-[0.03] blur-[150px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">

@@ -5,7 +5,7 @@ import { services } from '@/lib/services';
 
 export default function Services() {
   return (
-    <section id="services" className="section-padding bg-[var(--bg-secondary)] relative">
+    <section id="services" className="section-padding bg-[var(--bg-secondary)] relative overflow-hidden">
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 rounded-full bg-[var(--accent-primary)] opacity-[0.03] blur-[120px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
