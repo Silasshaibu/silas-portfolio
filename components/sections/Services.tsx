@@ -1,0 +1,29 @@
+import SectionLabel from '@/components/ui/SectionLabel';
+import ServiceCard from '@/components/ui/ServiceCard';
+import ScrollReveal from '@/components/animations/ScrollReveal';
+import { services } from '@/lib/services';
+
+export default function Services() {
+  return (
+    <section id="services" className="section-padding bg-[var(--bg-secondary)] relative">
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 rounded-full bg-[var(--accent-primary)] opacity-[0.03] blur-[120px] pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
+        <ScrollReveal className="text-center mb-14">
+          <SectionLabel text="What I Do" />
+          <h2 className="font-grotesk font-bold text-[clamp(1.8rem,4vw,3rem)] text-[var(--text-primary)]">
+            Services Built Around Your Vision
+          </h2>
+        </ScrollReveal>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {services.map((service, i) => (
+            <ScrollReveal key={service.id} delay={i * 0.1}>
+              <ServiceCard service={service} />
+            </ScrollReveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
