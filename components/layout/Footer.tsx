@@ -41,15 +41,6 @@ export default function Footer() {
             >
               LinkedIn
             </a>
-            <a
-              href="https://artstation.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs font-mono text-[var(--text-muted)] hover:text-[var(--accent-primary)] transition-colors"
-              aria-label="ArtStation"
-            >
-              ArtStation
-            </a>
           </div>
         </div>
 

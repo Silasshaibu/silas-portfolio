@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Mail, MessageSquare, ExternalLink, Send, CheckCircle, AlertCircle } from 'lucide-react';
+import { Mail, ExternalLink, Send, CheckCircle, AlertCircle } from 'lucide-react';
 import SectionLabel from '@/components/ui/SectionLabel';
 import ScrollReveal from '@/components/animations/ScrollReveal';
 import type { ContactFormData } from '@/types';
@@ -25,12 +25,6 @@ const contactLinks = [
     href: 'mailto:silasshaibu30bg@gmail.com',
   },
   {
-    icon: MessageSquare,
-    label: 'WhatsApp',
-    value: 'Message on WhatsApp',
-    href: 'https://wa.me/placeholder',
-  },
-  {
     icon: ExternalLink,
     label: 'Fiverr',
     value: 'fiverr.com/silasshaibu',
@@ -41,12 +35,6 @@ const contactLinks = [
     label: 'LinkedIn',
     value: 'linkedin.com/in/silasshaibu',
     href: 'https://linkedin.com',
-  },
-  {
-    icon: ExternalLink,
-    label: 'ArtStation',
-    value: 'artstation.com/silasshaibu',
-    href: 'https://artstation.com',
   },
 ];
 
