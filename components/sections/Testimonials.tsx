@@ -126,34 +126,40 @@ export default function Testimonials() {
         </div>
 
         {/* Pagination controls */}
-        <div className="flex items-center justify-center gap-4 mb-14">
+        <div className="relative flex items-center justify-center mb-14 h-10">
+          {/* Left arrow */}
           <button
             type="button"
             onClick={() => setPage((p) => Math.max(0, p - 1))}
             disabled={page === 0}
-            className="p-2 rounded-full glass-card disabled:opacity-30 hover:text-[var(--accent-primary)] transition-colors"
+            className="absolute left-0 p-2 rounded-full glass-card disabled:opacity-30 hover:text-[var(--accent-primary)] transition-colors"
             aria-label="Previous"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
 
+          {/* 3 dots */}
           <div className="flex items-center gap-2">
-            {Array.from({ length: totalPages }).map((_, i) => (
-              <button
-                type="button"
-                key={i}
-                onClick={() => setPage(i)}
-                className={`w-2 h-2 rounded-full transition-all ${i === page ? 'bg-[var(--accent-primary)] w-4' : 'bg-[var(--text-muted)]'}`}
-                aria-label={`Page ${i + 1}`}
-              />
-            ))}
+            {[0, 1, 2].map((dot) => {
+              const isActive =
+                (dot === 0 && page === 0) ||
+                (dot === 2 && page === totalPages - 1) ||
+                (dot === 1 && page > 0 && page < totalPages - 1);
+              return (
+                <span
+                  key={dot}
+                  className={`rounded-full transition-all duration-300 ${isActive ? 'w-4 h-2 bg-[var(--accent-primary)]' : 'w-2 h-2 bg-[var(--text-muted)]'}`}
+                />
+              );
+            })}
           </div>
 
+          {/* Right arrow */}
           <button
             type="button"
             onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
             disabled={page === totalPages - 1}
-            className="p-2 rounded-full glass-card disabled:opacity-30 hover:text-[var(--accent-primary)] transition-colors"
+            className="absolute right-0 p-2 rounded-full glass-card disabled:opacity-30 hover:text-[var(--accent-primary)] transition-colors"
             aria-label="Next"
           >
             <ChevronRight className="w-5 h-5" />
