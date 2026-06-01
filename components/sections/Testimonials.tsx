@@ -147,7 +147,7 @@ export default function Testimonials() {
                   <p className="text-sm text-[var(--text-secondary)] leading-relaxed flex-1 mb-6">
                     &ldquo;{t.quote}&rdquo;
                   </p>
-                  {(() => { const { service, flagCode } = parseCompany(t.company); return (
+                  {(() => { const { service, country, flagCode } = parseCompany(t.company); return (
                   <div className="flex items-center justify-between">
                     <div>
                       <div className="flex items-center gap-1.5">
@@ -157,14 +157,12 @@ export default function Testimonials() {
                           <img
                             src={`https://flagcdn.com/w20/${flagCode}.png`}
                             srcSet={`https://flagcdn.com/w40/${flagCode}.png 2x`}
-                            width={20}
-                            height={15}
-                            alt={flagCode.toUpperCase()}
-                            className="rounded-sm object-cover"
+                            alt={country}
+                            className="rounded-sm object-cover flex-shrink-0 h-[13px] w-auto"
                           />
                         )}
                       </div>
-                      <p className="text-xs text-[var(--text-muted)]">{service}</p>
+                      <p className="text-xs text-[var(--text-muted)]">{service}{country ? ` · ${country}` : ''}</p>
                     </div>
                     <span className={`text-xs px-2 py-1 rounded-full font-mono ${platformColors[t.platform]}`}>
                       {t.platform}
