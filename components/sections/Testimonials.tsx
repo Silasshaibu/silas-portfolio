@@ -7,27 +7,27 @@ const testimonials: Testimonial[] = [
   {
     id: '1',
     quote:
-      "Silas delivered exactly what we needed — a complex conveyor animation that made our pitch instantly understandable. The quality was on par with much larger studios. We ordered two more projects right away.",
-    name: 'Thomas K.',
-    company: 'Manufacturing Client, Germany',
+      "Silas did an OUTSTANDING job with the character modeling — his professionalism and attention to detail truly stood out. Working with him was a breeze thanks to his deep understanding, proactive communication, and seamless cooperation. Highly recommend!",
+    name: 'rawnugget',
+    company: 'Character Modeling · Switzerland',
     platform: 'Fiverr',
     rating: 5,
   },
   {
     id: '2',
     quote:
-      "The dental implant animation reduced our patient cancellation rate significantly. Patients now come in better informed and less anxious. Exceptional attention to anatomical detail.",
-    name: 'Dr. Sarah M.',
-    company: 'Dental Clinic Group, UAE',
-    platform: 'Direct',
+      "Silas met and exceeded all expectations. His communication and patience was well and he actively followed up to clarify and make changes. It was a complex project that he handled with great diligence. I would highly recommend Silas as he has done an excellent job and delivers great value at a very reasonable price point to help advance my ideas to reality.",
+    name: 'aameko',
+    company: 'Character Modeling · United States',
+    platform: 'Fiverr',
     rating: 5,
   },
   {
     id: '3',
     quote:
-      "Our Kickstarter product CGI looked better than anything I've seen at this funding stage. Silas understood the brief immediately and delivered a cinematic reveal that blew past our funding goal.",
-    name: 'James R.',
-    company: 'Tech Startup, USA',
+      "Silas is a very patient person — he did an amazing job, well beyond what I expected. He changed the design twice and even made a video to describe how to work with the file and measurements. If you have an idea and need to see it work, this is the guy, no doubts!",
+    name: 'omriliberman',
+    company: '3D Product Animation · Israel',
     platform: 'Fiverr',
     rating: 5,
   },
