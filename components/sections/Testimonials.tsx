@@ -48,6 +48,30 @@ const testimonials: Testimonial[] = [
 
 const PER_PAGE = 3;
 
+const countryFlags: Record<string, string> = {
+  'Switzerland': '🇨🇭',
+  'United States': '🇺🇸',
+  'Israel': '🇮🇱',
+  'United Kingdom': '🇬🇧',
+  'Nigeria': '🇳🇬',
+  'Saudi Arabia': '🇸🇦',
+  'Turkey': '🇹🇷',
+  'Germany': '🇩🇪',
+  'Canada': '🇨🇦',
+  'Oman': '🇴🇲',
+  'France': '🇫🇷',
+  'Morocco': '🇲🇦',
+  'India': '🇮🇳',
+  'Australia': '🇦🇺',
+};
+
+function formatCompany(company: string) {
+  const parts = company.split(' · ');
+  if (parts.length < 2) return { service: company, flag: '' };
+  const country = parts[parts.length - 1].trim();
+  return { service: parts[0].trim(), flag: countryFlags[country] ?? country };
+}
+
 const platformColors: Record<string, string> = {
   Fiverr: 'bg-[rgba(29,191,115,0.1)] text-[#1dbf73]',
   LinkedIn: 'bg-[rgba(10,102,194,0.1)] text-[#0a66c2]',
@@ -124,15 +148,17 @@ export default function Testimonials() {
                   <p className="text-sm text-[var(--text-secondary)] leading-relaxed flex-1 mb-6">
                     &ldquo;{t.quote}&rdquo;
                   </p>
+                  {(() => { const { service, flag } = formatCompany(t.company); return (
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-sm font-medium text-[var(--text-primary)]">{t.name}</p>
-                      <p className="text-xs text-[var(--text-muted)]">{t.company}</p>
+                      <p className="text-xs text-[var(--text-muted)]">{service} {flag && <span className="text-base leading-none">{flag}</span>}</p>
                     </div>
                     <span className={`text-xs px-2 py-1 rounded-full font-mono ${platformColors[t.platform]}`}>
                       {t.platform}
                     </span>
                   </div>
+                  ); })()}
                 </div>
               </ScrollReveal>
             ))}
