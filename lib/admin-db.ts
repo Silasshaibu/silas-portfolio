@@ -169,11 +169,22 @@ export async function dbDeleteTestimonial(id: number) {
   await sql`DELETE FROM testimonials WHERE id = ${id}`;
 }
 
+const DEFAULT_CONTACT_LINKS = JSON.stringify([
+  { label: 'Email', value: 'silasshaibu30bg@gmail.com', href: 'mailto:silasshaibu30bg@gmail.com' },
+  { label: 'Fiverr', value: 'fiverr.com/silasshaibu', href: 'https://fiverr.com' },
+  { label: 'LinkedIn', value: 'linkedin.com/in/silasshaibu', href: 'https://linkedin.com' },
+]);
+
 // Settings
 export async function dbGetSettings() {
   const sql = getDb();
   const rows = await sql`SELECT * FROM site_settings`;
-  return Object.fromEntries((rows as { key: string; value: string }[]).map((r) => [r.key, r.value]));
+  const settings = Object.fromEntries((rows as { key: string; value: string }[]).map((r) => [r.key, r.value]));
+  if (!settings.contact_links) {
+    await sql`INSERT INTO site_settings (key, value) VALUES ('contact_links', ${DEFAULT_CONTACT_LINKS}) ON CONFLICT DO NOTHING`;
+    settings.contact_links = DEFAULT_CONTACT_LINKS;
+  }
+  return settings;
 }
 export async function dbSetSetting(key: string, value: string) {
   const sql = getDb();
