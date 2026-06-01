@@ -1,9 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { dbGetTestimonials, dbCreateTestimonial } from '@/lib/admin-db';
+import { dbGetTestimonials, dbCreateTestimonial, dbReorderTestimonials } from '@/lib/admin-db';
 
 export async function GET() {
   try {
     return NextResponse.json(await dbGetTestimonials());
+  } catch (e) {
+    return NextResponse.json({ error: String(e) }, { status: 500 });
+  }
+}
+
+export async function PATCH(request: NextRequest) {
+  try {
+    const { order } = await request.json();
+    await dbReorderTestimonials(order);
+    return NextResponse.json({ success: true });
   } catch (e) {
     return NextResponse.json({ error: String(e) }, { status: 500 });
   }

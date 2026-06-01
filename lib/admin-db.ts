@@ -227,6 +227,12 @@ export async function dbDeleteTestimonial(id: number) {
   const sql = getDb();
   await sql`DELETE FROM testimonials WHERE id = ${id}`;
 }
+export async function dbReorderTestimonials(order: { id: number; sort_order: number }[]) {
+  const sql = getDb();
+  for (const { id, sort_order } of order) {
+    await sql`UPDATE testimonials SET sort_order=${sort_order}, updated_at=NOW() WHERE id=${id}`;
+  }
+}
 export async function dbSeedDefaultTestimonials() {
   const sql = getDb();
   const existing = await sql`SELECT COUNT(*) as count FROM testimonials`;
