@@ -106,6 +106,12 @@ export async function dbDeleteProject(id: number) {
   const sql = getDb();
   await sql`DELETE FROM projects WHERE id = ${id}`;
 }
+export async function dbReorderProjects(order: { id: number; sort_order: number }[]) {
+  const sql = getDb();
+  for (const { id, sort_order } of order) {
+    await sql`UPDATE projects SET sort_order=${sort_order}, updated_at=NOW() WHERE id=${id}`;
+  }
+}
 export async function dbSeedDefaultProjects() {
   const sql = getDb();
   const existing = await sql`SELECT COUNT(*) as count FROM projects`;

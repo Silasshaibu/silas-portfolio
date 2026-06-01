@@ -1,10 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { dbGetProjects, dbCreateProject } from '@/lib/admin-db';
+import { dbGetProjects, dbCreateProject, dbReorderProjects } from '@/lib/admin-db';
 
 export async function GET() {
   try {
     const projects = await dbGetProjects();
     return NextResponse.json(projects);
+  } catch (e) {
+    return NextResponse.json({ error: String(e) }, { status: 500 });
+  }
+}
+
+export async function PATCH(request: NextRequest) {
+  try {
+    const { order } = await request.json(); // [{ id, sort_order }]
+    await dbReorderProjects(order);
+    return NextResponse.json({ success: true });
   } catch (e) {
     return NextResponse.json({ error: String(e) }, { status: 500 });
   }
