@@ -103,67 +103,67 @@ export default function Testimonials() {
           <p className="text-sm text-[var(--text-muted)] mt-2">{list.length} verified Fiverr reviews</p>
         </ScrollReveal>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          {visible.map((t, i) => (
-            <ScrollReveal key={t.id} delay={i * 0.1}>
-              <div className="glass-card rounded-xl p-6 h-full flex flex-col">
-                <StarRating rating={t.rating} />
-                <p className="text-sm text-[var(--text-secondary)] leading-relaxed flex-1 mb-6">
-                  &ldquo;{t.quote}&rdquo;
-                </p>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-[var(--text-primary)]">{t.name}</p>
-                    <p className="text-xs text-[var(--text-muted)]">{t.company}</p>
-                  </div>
-                  <span className={`text-xs px-2 py-1 rounded-full font-mono ${platformColors[t.platform]}`}>
-                    {t.platform}
-                  </span>
-                </div>
-              </div>
-            </ScrollReveal>
-          ))}
-        </div>
-
-        {/* Pagination controls */}
-        <div className="relative flex items-center justify-center mb-14 h-10">
-          {/* Left arrow */}
+        {/* Cards + side arrows */}
+        <div className="relative flex items-center gap-4 mb-8">
+          {/* Left arrow — vertically centered beside cards */}
           <button
             type="button"
             onClick={() => setPage((p) => Math.max(0, p - 1))}
             disabled={page === 0}
-            className="absolute left-0 p-2 rounded-full glass-card disabled:opacity-30 hover:text-[var(--accent-primary)] transition-colors"
+            className="flex-shrink-0 p-2 rounded-full glass-card disabled:opacity-30 hover:text-[var(--accent-primary)] transition-colors"
             aria-label="Previous"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
 
-          {/* 3 dots */}
-          <div className="flex items-center gap-2">
-            {[0, 1, 2].map((dot) => {
-              const isActive =
-                (dot === 0 && page === 0) ||
-                (dot === 2 && page === totalPages - 1) ||
-                (dot === 1 && page > 0 && page < totalPages - 1);
-              return (
-                <span
-                  key={dot}
-                  className={`rounded-full transition-all duration-300 ${isActive ? 'w-4 h-2 bg-[var(--accent-primary)]' : 'w-2 h-2 bg-[var(--text-muted)]'}`}
-                />
-              );
-            })}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 flex-1">
+            {visible.map((t, i) => (
+              <ScrollReveal key={t.id} delay={i * 0.1}>
+                <div className="glass-card rounded-xl p-6 h-full flex flex-col">
+                  <StarRating rating={t.rating} />
+                  <p className="text-sm text-[var(--text-secondary)] leading-relaxed flex-1 mb-6">
+                    &ldquo;{t.quote}&rdquo;
+                  </p>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-[var(--text-primary)]">{t.name}</p>
+                      <p className="text-xs text-[var(--text-muted)]">{t.company}</p>
+                    </div>
+                    <span className={`text-xs px-2 py-1 rounded-full font-mono ${platformColors[t.platform]}`}>
+                      {t.platform}
+                    </span>
+                  </div>
+                </div>
+              </ScrollReveal>
+            ))}
           </div>
 
-          {/* Right arrow */}
+          {/* Right arrow — vertically centered beside cards */}
           <button
             type="button"
             onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
             disabled={page === totalPages - 1}
-            className="absolute right-0 p-2 rounded-full glass-card disabled:opacity-30 hover:text-[var(--accent-primary)] transition-colors"
+            className="flex-shrink-0 p-2 rounded-full glass-card disabled:opacity-30 hover:text-[var(--accent-primary)] transition-colors"
             aria-label="Next"
           >
             <ChevronRight className="w-5 h-5" />
           </button>
+        </div>
+
+        {/* 3 dots */}
+        <div className="flex items-center justify-center gap-2 mb-14">
+          {[0, 1, 2].map((dot) => {
+            const isActive =
+              (dot === 0 && page === 0) ||
+              (dot === 2 && page === totalPages - 1) ||
+              (dot === 1 && page > 0 && page < totalPages - 1);
+            return (
+              <span
+                key={dot}
+                className={`rounded-full transition-all duration-300 ${isActive ? 'w-4 h-2 bg-[var(--accent-primary)]' : 'w-2 h-2 bg-[var(--text-muted)]'}`}
+              />
+            );
+          })}
         </div>
 
         <ScrollReveal delay={0.3}>
