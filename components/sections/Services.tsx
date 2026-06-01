@@ -9,7 +9,7 @@ export default async function Services() {
   try {
     const rows = await dbGetPublicServices();
     items = rows.length > 0
-      ? rows.map((r: Record<string, unknown>) => ({ id: String(r.id), icon: r.icon, title: r.title, description: r.description }))
+      ? rows.map((r: Record<string, unknown>) => ({ id: String(r.id), icon: String(r.icon ?? ''), title: String(r.title ?? ''), description: String(r.description ?? '') }))
       : fallback;
   } catch {
     items = fallback;
@@ -28,7 +28,7 @@ export default async function Services() {
         </ScrollReveal>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {items.map((service: { id: string; icon: string; title: string; description: string }, i: number) => (
+          {(items as { id: string; icon: string; title: string; description: string }[]).map((service, i) => (
             <ScrollReveal key={service.id} delay={i * 0.1}>
               <ServiceCard service={service} />
             </ScrollReveal>
