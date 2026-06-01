@@ -1,9 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { dbGetServices, dbCreateService } from '@/lib/admin-db';
+import { dbGetServices, dbCreateService, dbReorderServices } from '@/lib/admin-db';
 
 export async function GET() {
   try {
     return NextResponse.json(await dbGetServices());
+  } catch (e) {
+    return NextResponse.json({ error: String(e) }, { status: 500 });
+  }
+}
+
+export async function PATCH(request: NextRequest) {
+  try {
+    const { order } = await request.json();
+    await dbReorderServices(order);
+    return NextResponse.json({ success: true });
   } catch (e) {
     return NextResponse.json({ error: String(e) }, { status: 500 });
   }

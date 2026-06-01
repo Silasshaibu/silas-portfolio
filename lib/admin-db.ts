@@ -179,6 +179,12 @@ export async function dbDeleteService(id: number) {
   const sql = getDb();
   await sql`DELETE FROM services WHERE id = ${id}`;
 }
+export async function dbReorderServices(order: { id: number; sort_order: number }[]) {
+  const sql = getDb();
+  for (const { id, sort_order } of order) {
+    await sql`UPDATE services SET sort_order=${sort_order}, updated_at=NOW() WHERE id=${id}`;
+  }
+}
 export async function dbSeedDefaultServices() {
   const sql = getDb();
   const existing = await sql`SELECT COUNT(*) as count FROM services`;
