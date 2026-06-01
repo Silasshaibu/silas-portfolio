@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { seedAdminTables, dbCreateAdmin, dbGetAdminByEmail } from '@/lib/admin-db';
+import { seedAdminTables, dbCreateAdmin, dbGetAdminByEmail, dbSeedDefaultServices } from '@/lib/admin-db';
 import bcrypt from 'bcryptjs';
 
 export async function POST() {
@@ -15,6 +15,7 @@ export async function POST() {
       await dbCreateAdmin(email, hash);
     }
 
+    await dbSeedDefaultServices();
     return NextResponse.json({ success: true, message: 'Database seeded' });
   } catch (error) {
     console.error('[Seed Error]', error);

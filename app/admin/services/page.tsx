@@ -10,10 +10,16 @@ export default function AdminServicesPage() {
     const res = await fetch('/api/admin/services');
     if (res.ok) setRows(await res.json());
   };
+
   useEffect(() => { load(); }, []);
 
   const onDelete = async (id: number) => {
     await fetch(`/api/admin/services/${id}`, { method: 'DELETE' });
+    load();
+  };
+
+  const onToggleDraft = async (id: number) => {
+    await fetch(`/api/admin/services/${id}`, { method: 'PATCH' });
     load();
   };
 
@@ -29,6 +35,7 @@ export default function AdminServicesPage() {
       rows={rows}
       onDelete={onDelete}
       editHref={(id) => `/admin/services/${id}`}
+      onToggleDraft={onToggleDraft}
     />
   );
 }

@@ -1,10 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import { Pencil, Trash2, Plus } from 'lucide-react';
+import { Pencil, Trash2, Plus, Eye, EyeOff } from 'lucide-react';
 
 interface Column { key: string; label: string; }
-interface Row { id: number; [key: string]: unknown; }
+interface Row { id: number; hidden?: boolean; [key: string]: unknown; }
 
 interface AdminTableProps {
   title: string;
@@ -13,9 +13,10 @@ interface AdminTableProps {
   rows: Row[];
   onDelete: (id: number) => void;
   editHref: (id: number) => string;
+  onToggleDraft?: (id: number) => void;
 }
 
-export default function AdminTable({ title, newHref, columns, rows, onDelete, editHref }: AdminTableProps) {
+export default function AdminTable({ title, newHref, columns, rows, onDelete, editHref, onToggleDraft }: AdminTableProps) {
   return (
     <div className="p-8">
       <div className="flex items-center justify-between mb-6">
@@ -42,19 +43,40 @@ export default function AdminTable({ title, newHref, columns, rows, onDelete, ed
                     {col.label}
                   </th>
                 ))}
+                {onToggleDraft && (
+                  <th className="px-4 py-3 text-left text-xs font-mono text-[var(--text-muted)] uppercase tracking-wider">Status</th>
+                )}
                 <th className="px-4 py-3 text-right text-xs font-mono text-[var(--text-muted)] uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
             <tbody>
               {rows.map((row, i) => (
-                <tr key={row.id} className={`border-b border-[var(--border-subtle)] last:border-0 hover:bg-[var(--glass-bg)] transition-colors ${i % 2 === 0 ? '' : 'bg-[rgba(255,255,255,0.01)]'}`}>
+                <tr key={row.id} className={`border-b border-[var(--border-subtle)] last:border-0 hover:bg-[var(--glass-bg)] transition-colors ${i % 2 === 0 ? '' : 'bg-[rgba(255,255,255,0.01)]'} ${row.hidden ? 'opacity-50' : ''}`}>
                   {columns.map(col => (
                     <td key={col.key} className="px-4 py-3 text-[var(--text-secondary)] max-w-[200px] truncate">
                       {String(row[col.key] ?? '')}
                     </td>
                   ))}
+                  {onToggleDraft && (
+                    <td className="px-4 py-3">
+                      <span className={`text-xs px-2 py-0.5 rounded-full font-mono ${row.hidden ? 'bg-yellow-400/10 text-yellow-400' : 'bg-green-400/10 text-green-400'}`}>
+                        {row.hidden ? 'Draft' : 'Live'}
+                      </span>
+                    </td>
+                  )}
                   <td className="px-4 py-3">
                     <div className="flex items-center justify-end gap-2">
+                      {onToggleDraft && (
+                        <button
+                          type="button"
+                          onClick={() => onToggleDraft(row.id)}
+                          className="p-1.5 rounded-lg text-[var(--text-secondary)] hover:text-yellow-400 hover:bg-[rgba(250,204,21,0.08)] transition-colors"
+                          aria-label={row.hidden ? 'Set Live' : 'Set Draft'}
+                          title={row.hidden ? 'Set Live' : 'Set Draft'}
+                        >
+                          {row.hidden ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                        </button>
+                      )}
                       <Link
                         href={editHref(row.id)}
                         className="p-1.5 rounded-lg text-[var(--text-secondary)] hover:text-[var(--accent-primary)] hover:bg-[rgba(0,212,255,0.08)] transition-colors"
@@ -63,6 +85,7 @@ export default function AdminTable({ title, newHref, columns, rows, onDelete, ed
                         <Pencil className="w-4 h-4" />
                       </Link>
                       <button
+                        type="button"
                         onClick={() => {
                           if (confirm('Delete this item?')) onDelete(row.id);
                         }}

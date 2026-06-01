@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { dbGetService, dbUpdateService, dbDeleteService } from '@/lib/admin-db';
+import { dbGetService, dbUpdateService, dbDeleteService, dbToggleServiceHidden } from '@/lib/admin-db';
 
 export async function GET(_: NextRequest, { params }: { params: { id: string } }) {
   try {
@@ -19,7 +19,17 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       title: data.title,
       description: data.description,
       sortOrder: data.sortOrder ?? 0,
+      hidden: data.hidden ?? false,
     });
+    return NextResponse.json(s);
+  } catch (e) {
+    return NextResponse.json({ error: String(e) }, { status: 500 });
+  }
+}
+
+export async function PATCH(_: NextRequest, { params }: { params: { id: string } }) {
+  try {
+    const s = await dbToggleServiceHidden(Number(params.id));
     return NextResponse.json(s);
   } catch (e) {
     return NextResponse.json({ error: String(e) }, { status: 500 });

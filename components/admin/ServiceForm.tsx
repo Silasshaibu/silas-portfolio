@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { ArrowLeft, Save } from 'lucide-react';
 import Link from 'next/link';
 
-interface ServiceFormData { icon: string; title: string; description: string; sortOrder: number; }
+interface ServiceFormData { icon: string; title: string; description: string; sortOrder: number; hidden: boolean; }
 
 interface Props { defaultValues?: Partial<ServiceFormData>; serviceId?: number; }
 
@@ -60,6 +60,12 @@ export default function ServiceForm({ defaultValues, serviceId }: Props) {
         <div>
           <label className="block text-xs font-mono text-[var(--text-muted)] mb-2">Sort Order</label>
           <input type="number" {...register('sortOrder')} className={input} placeholder="0" />
+        </div>
+        <div className="flex items-center gap-3">
+          <input type="checkbox" id="hidden" {...register('hidden')} className="w-4 h-4 accent-yellow-400" />
+          <label htmlFor="hidden" className="text-sm text-[var(--text-secondary)]">
+            Save as <span className="text-yellow-400 font-mono">Draft</span> (hidden from live site)
+          </label>
         </div>
         {error && <p className="text-xs text-red-400 bg-red-400/10 border border-red-400/20 rounded-lg px-3 py-2">{error}</p>}
         <button type="submit" disabled={saving} className="flex items-center gap-2 px-6 py-3 rounded-lg bg-[var(--accent-primary)] text-[#080808] font-semibold text-sm hover:shadow-[0_0_20px_rgba(0,212,255,0.3)] transition-all disabled:opacity-60">

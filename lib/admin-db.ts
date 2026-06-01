@@ -42,10 +42,12 @@ export async function seedAdminTables() {
       title TEXT NOT NULL,
       description TEXT NOT NULL,
       sort_order INTEGER NOT NULL DEFAULT 0,
+      hidden BOOLEAN NOT NULL DEFAULT false,
       created_at TIMESTAMPTZ DEFAULT NOW(),
       updated_at TIMESTAMPTZ DEFAULT NOW()
     )
   `;
+  await sql`ALTER TABLE services ADD COLUMN IF NOT EXISTS hidden BOOLEAN NOT NULL DEFAULT false`;
   await sql`
     CREATE TABLE IF NOT EXISTS testimonials (
       id SERIAL PRIMARY KEY,
@@ -110,6 +112,10 @@ export async function dbGetServices() {
   const sql = getDb();
   return sql`SELECT * FROM services ORDER BY sort_order ASC, created_at ASC`;
 }
+export async function dbGetPublicServices() {
+  const sql = getDb();
+  return sql`SELECT * FROM services WHERE hidden = false ORDER BY sort_order ASC, created_at ASC`;
+}
 export async function dbGetService(id: number) {
   const sql = getDb();
   const rows = await sql`SELECT * FROM services WHERE id = ${id}`;
@@ -118,8 +124,8 @@ export async function dbGetService(id: number) {
 export async function dbCreateService(data: Record<string, unknown>) {
   const sql = getDb();
   const rows = await sql`
-    INSERT INTO services (icon, title, description, sort_order)
-    VALUES (${data.icon}, ${data.title}, ${data.description}, ${data.sortOrder})
+    INSERT INTO services (icon, title, description, sort_order, hidden)
+    VALUES (${data.icon}, ${data.title}, ${data.description}, ${data.sortOrder}, ${data.hidden ?? false})
     RETURNING *
   `;
   return rows[0];
@@ -127,7 +133,15 @@ export async function dbCreateService(data: Record<string, unknown>) {
 export async function dbUpdateService(id: number, data: Record<string, unknown>) {
   const sql = getDb();
   const rows = await sql`
-    UPDATE services SET icon=${data.icon}, title=${data.title}, description=${data.description}, sort_order=${data.sortOrder}, updated_at=NOW()
+    UPDATE services SET icon=${data.icon}, title=${data.title}, description=${data.description}, sort_order=${data.sortOrder}, hidden=${data.hidden ?? false}, updated_at=NOW()
+    WHERE id=${id} RETURNING *
+  `;
+  return rows[0];
+}
+export async function dbToggleServiceHidden(id: number) {
+  const sql = getDb();
+  const rows = await sql`
+    UPDATE services SET hidden = NOT hidden, updated_at=NOW()
     WHERE id=${id} RETURNING *
   `;
   return rows[0];
@@ -135,6 +149,22 @@ export async function dbUpdateService(id: number, data: Record<string, unknown>)
 export async function dbDeleteService(id: number) {
   const sql = getDb();
   await sql`DELETE FROM services WHERE id = ${id}`;
+}
+export async function dbSeedDefaultServices() {
+  const sql = getDb();
+  const existing = await sql`SELECT COUNT(*) as count FROM services`;
+  if (Number((existing[0] as { count: string }).count) > 0) return;
+  const defaults = [
+    { icon: 'Box', title: '3D Product Animation', description: 'Cinematic product reveals, rotations, and feature highlights for ads, launches, and e-commerce. Photorealistic CGI that replaces expensive photography.', sort_order: 1 },
+    { icon: 'Settings', title: 'Industrial Machine Visualization', description: 'Complex machine animations that break down how systems work — conveyors, drives, sorting machines. Built for manufacturers, engineers, and investors.', sort_order: 2 },
+    { icon: 'GitBranch', title: 'Engineering Explainer Animations', description: 'Visual explainers that make technical processes easy to understand for any audience — from shop floor to boardroom.', sort_order: 3 },
+    { icon: 'Heart', title: 'Medical & Dental Animation', description: 'Surgical explainers, implant demonstrations, and medical device visualizations. Anatomically accurate, patient-ready animations.', sort_order: 4 },
+    { icon: 'Camera', title: 'CGI Advertising', description: 'High-end CGI product shots for advertising campaigns, combining photorealism and creative direction for any platform.', sort_order: 5 },
+    { icon: 'Play', title: 'Motion Graphics', description: 'Animated logos, openers, transitions, and branded video graphics for any platform. From social media to broadcast.', sort_order: 6 },
+  ];
+  for (const s of defaults) {
+    await sql`INSERT INTO services (icon, title, description, sort_order, hidden) VALUES (${s.icon}, ${s.title}, ${s.description}, ${s.sort_order}, false)`;
+  }
 }
 
 // Testimonials
