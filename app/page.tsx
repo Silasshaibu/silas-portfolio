@@ -9,16 +9,32 @@ import About from '@/components/sections/About';
 import Contact from '@/components/sections/Contact';
 import GlowDivider from '@/components/ui/GlowDivider';
 import CursorGlow from '@/components/ui/CursorGlow';
+import { dbGetSettings } from '@/lib/admin-db';
 
-export default function HomePage() {
+export default async function HomePage() {
+  let settings: Record<string, string> = {};
+  try { settings = await dbGetSettings() as Record<string, string>; } catch { /* use defaults */ }
+
+  const heroStats = (() => { try { return JSON.parse(settings.hero_stats ?? '[]'); } catch { return ['50+ Projects', '5 Years Experience', 'Industrial & Medical Specialist']; } })();
+  const showreelStats = (() => { try { return JSON.parse(settings.showreel_stats ?? '[]'); } catch { return ['30+ Industrial Projects', 'Product Visualization', 'CGI & Motion']; } })();
+  const aboutSkills = (() => { try { return JSON.parse(settings.about_skills ?? '[]'); } catch { return ['Blender', 'After Effects', 'Product Visualization', 'Industrial Animation', 'Medical Animation', 'Motion Graphics']; } })();
+
   return (
     <>
       <CursorGlow />
       <Navbar />
       <main>
-        <Hero />
+        <Hero
+          overline={settings.hero_overline}
+          tagline={settings.tagline}
+          subtext={settings.subtext}
+          stats={heroStats}
+        />
         <GlowDivider />
-        <ShowReel />
+        <ShowReel
+          vimeoId={settings.showreel_vimeo_id}
+          stats={showreelStats}
+        />
         <GlowDivider />
         <Projects />
         <GlowDivider />
@@ -26,7 +42,14 @@ export default function HomePage() {
         <GlowDivider />
         <Testimonials />
         <GlowDivider />
-        <About />
+        <About
+          headline={settings.about_headline}
+          bio1={settings.about_bio_1}
+          bio2={settings.about_bio_2}
+          bio3={settings.about_bio_3}
+          skills={aboutSkills}
+          pdfUrl={settings.about_pdf_url}
+        />
         <GlowDivider />
         <Contact />
       </main>

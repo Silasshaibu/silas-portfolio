@@ -205,14 +205,36 @@ const DEFAULT_CONTACT_LINKS = JSON.stringify([
   { label: 'LinkedIn', value: 'linkedin.com/in/silasshaibu', href: 'https://linkedin.com' },
 ]);
 
+const SETTING_DEFAULTS: Record<string, string> = {
+  contact_links: DEFAULT_CONTACT_LINKS,
+  email: 'silasshaibu30bg@gmail.com',
+  // Hero
+  hero_overline: '[ 3D VISUALIZATION · MOTION DESIGN · ENGINEERING ]',
+  tagline: 'Bringing Engineering & Products to Life in 3D',
+  subtext: 'I design cinematic 3D animations and product visuals that help manufacturers, brands, and engineering firms communicate complex ideas with clarity.',
+  hero_stats: JSON.stringify(['50+ Projects', '5 Years Experience', 'Industrial & Medical Specialist']),
+  // ShowReel
+  showreel_vimeo_id: '',
+  showreel_stats: JSON.stringify(['30+ Industrial Projects', 'Product Visualization', 'CGI & Motion']),
+  // About
+  about_headline: 'Engineering Thinking. Cinematic Vision.',
+  about_bio_1: "I'm Silas Shaibu — a 3D visualization artist who sits at the intersection of technical understanding and creative storytelling. I specialize in helping manufacturers, engineering firms, and product brands communicate complex ideas through high-end animation and CGI.",
+  about_bio_2: "With deep expertise in Blender and an engineering-informed workflow, I bring industrial accuracy to every frame — whether it's a conveyor system animation, a product launch reveal, or a medical explainer.",
+  about_bio_3: 'My background in dental studies adds a unique edge in medical visualization — an increasingly high-value niche in the 3D world.',
+  about_skills: JSON.stringify(['Blender', 'After Effects', 'Product Visualization', 'Industrial Animation', 'Medical Animation', 'Motion Graphics', 'Houdini (learning)', 'Unreal Engine (learning)']),
+  about_pdf_url: '/portfolio.pdf',
+};
+
 // Settings
 export async function dbGetSettings() {
   const sql = getDb();
   const rows = await sql`SELECT * FROM site_settings`;
   const settings = Object.fromEntries((rows as { key: string; value: string }[]).map((r) => [r.key, r.value]));
-  if (!settings.contact_links) {
-    await sql`INSERT INTO site_settings (key, value) VALUES ('contact_links', ${DEFAULT_CONTACT_LINKS}) ON CONFLICT DO NOTHING`;
-    settings.contact_links = DEFAULT_CONTACT_LINKS;
+  for (const [key, value] of Object.entries(SETTING_DEFAULTS)) {
+    if (!settings[key]) {
+      await sql`INSERT INTO site_settings (key, value) VALUES (${key}, ${value}) ON CONFLICT DO NOTHING`;
+      settings[key] = value;
+    }
   }
   return settings;
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import SectionLabel from '@/components/ui/SectionLabel';
 import ScrollReveal from '@/components/animations/ScrollReveal';
@@ -69,8 +69,28 @@ function StarRating({ rating }: { rating: number }) {
 
 export default function Testimonials() {
   const [page, setPage] = useState(0);
-  const totalPages = Math.ceil(testimonials.length / PER_PAGE);
-  const visible = testimonials.slice(page * PER_PAGE, page * PER_PAGE + PER_PAGE);
+  const [list, setList] = useState<Testimonial[]>(testimonials);
+
+  useEffect(() => {
+    fetch('/api/admin/testimonials')
+      .then(r => r.ok ? r.json() : null)
+      .then((rows: Array<{ id: number; quote: string; name: string; company: string; platform: string; rating: number }> | null) => {
+        if (rows && rows.length > 0) {
+          setList(rows.map(r => ({
+            id: String(r.id),
+            quote: r.quote,
+            name: r.name,
+            company: r.company,
+            platform: r.platform as Testimonial['platform'],
+            rating: r.rating,
+          })));
+        }
+      })
+      .catch(() => { /* keep hardcoded fallback */ });
+  }, []);
+
+  const totalPages = Math.ceil(list.length / PER_PAGE);
+  const visible = list.slice(page * PER_PAGE, page * PER_PAGE + PER_PAGE);
 
   return (
     <section className="section-padding bg-[var(--bg-primary)]">
@@ -80,7 +100,7 @@ export default function Testimonials() {
           <h2 className="font-grotesk font-bold text-[clamp(1.8rem,4vw,3rem)] text-[var(--text-primary)]">
             Trusted by Clients Globally
           </h2>
-          <p className="text-sm text-[var(--text-muted)] mt-2">{testimonials.length} verified Fiverr reviews</p>
+          <p className="text-sm text-[var(--text-muted)] mt-2">{list.length} verified Fiverr reviews</p>
         </ScrollReveal>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">

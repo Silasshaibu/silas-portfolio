@@ -2,14 +2,14 @@
 
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { LayoutDashboard, FolderOpen, Wrench, Quote, Settings, LogOut, ExternalLink } from 'lucide-react';
+import { LayoutDashboard, FolderOpen, Wrench, Quote, Settings, LogOut, ExternalLink, FileText } from 'lucide-react';
 
 const nav = [
   { label: 'Dashboard', href: '/admin', icon: LayoutDashboard },
   { label: 'Projects', href: '/admin/projects', icon: FolderOpen },
   { label: 'Services', href: '/admin/services', icon: Wrench },
   { label: 'Testimonials', href: '/admin/testimonials', icon: Quote },
-  { label: 'Settings', href: '/admin/settings', icon: Settings },
+  { label: 'Site Content', href: '/admin/settings', icon: FileText },
 ];
 
 export default function AdminShell({ children }: { children: React.ReactNode }) {

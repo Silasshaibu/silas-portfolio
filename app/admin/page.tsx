@@ -1,11 +1,11 @@
 import Link from 'next/link';
-import { FolderOpen, Wrench, Quote, Settings, ArrowRight } from 'lucide-react';
+import { FolderOpen, Wrench, Quote, FileText, ArrowRight } from 'lucide-react';
 
 const cards = [
   { label: 'Projects', desc: 'Add, edit or remove portfolio projects', href: '/admin/projects', icon: FolderOpen, color: 'rgba(0,212,255,0.1)', border: 'rgba(0,212,255,0.2)' },
-  { label: 'Services', desc: 'Manage the services you offer', href: '/admin/services', icon: Wrench, color: 'rgba(123,47,247,0.1)', border: 'rgba(123,47,247,0.2)' },
-  { label: 'Testimonials', desc: 'Add client testimonials and reviews', href: '/admin/testimonials', icon: Quote, color: 'rgba(34,197,94,0.1)', border: 'rgba(34,197,94,0.2)' },
-  { label: 'Settings', desc: 'Update contact info, social links, bio', href: '/admin/settings', icon: Settings, color: 'rgba(251,191,36,0.1)', border: 'rgba(251,191,36,0.2)' },
+  { label: 'Services', desc: 'Manage services with draft/live toggle', href: '/admin/services', icon: Wrench, color: 'rgba(123,47,247,0.1)', border: 'rgba(123,47,247,0.2)' },
+  { label: 'Testimonials', desc: 'Add and manage client reviews', href: '/admin/testimonials', icon: Quote, color: 'rgba(34,197,94,0.1)', border: 'rgba(34,197,94,0.2)' },
+  { label: 'Site Content', desc: 'Edit Hero, ShowReel, About, and Contact sections', href: '/admin/settings', icon: FileText, color: 'rgba(251,191,36,0.1)', border: 'rgba(251,191,36,0.2)' },
 ];
 
 export default function AdminDashboard() {

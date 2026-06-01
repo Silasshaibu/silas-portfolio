@@ -2,18 +2,29 @@ import SectionLabel from '@/components/ui/SectionLabel';
 import Button from '@/components/ui/Button';
 import ScrollReveal from '@/components/animations/ScrollReveal';
 
-const skills = [
-  'Blender',
-  'After Effects',
-  'Product Visualization',
-  'Industrial Animation',
-  'Medical Animation',
-  'Motion Graphics',
-  'Houdini (learning)',
-  'Unreal Engine (learning)',
-];
+const DEFAULT_SKILLS = ['Blender', 'After Effects', 'Product Visualization', 'Industrial Animation', 'Medical Animation', 'Motion Graphics', 'Houdini (learning)', 'Unreal Engine (learning)'];
 
-export default function About() {
+interface AboutProps {
+  headline?: string;
+  bio1?: string;
+  bio2?: string;
+  bio3?: string;
+  skills?: string[];
+  pdfUrl?: string;
+}
+
+export default function About({ headline, bio1, bio2, bio3, skills, pdfUrl }: AboutProps) {
+  const displayHeadline = headline || 'Engineering Thinking. Cinematic Vision.';
+  const displayBio1 = bio1 || "I'm Silas Shaibu — a 3D visualization artist who sits at the intersection of technical understanding and creative storytelling. I specialize in helping manufacturers, engineering firms, and product brands communicate complex ideas through high-end animation and CGI.";
+  const displayBio2 = bio2 || "With deep expertise in Blender and an engineering-informed workflow, I bring industrial accuracy to every frame — whether it's a conveyor system animation, a product launch reveal, or a medical explainer.";
+  const displayBio3 = bio3 || 'My background in dental studies adds a unique edge in medical visualization — an increasingly high-value niche in the 3D world.';
+  const displaySkills = (skills && skills.length > 0) ? skills : DEFAULT_SKILLS;
+  const displayPdfUrl = pdfUrl || '/portfolio.pdf';
+
+  const [headlineMain, headlineAccent] = displayHeadline.includes('.')
+    ? [displayHeadline.split('.')[0].trim() + '.', displayHeadline.split('.').slice(1).join('.').trim()]
+    : [displayHeadline, ''];
+
   return (
     <section id="about" className="section-padding bg-[var(--bg-secondary)]">
       <div className="max-w-7xl mx-auto px-6">
@@ -21,45 +32,26 @@ export default function About() {
           <ScrollReveal>
             <SectionLabel text="About" />
             <h2 className="font-grotesk font-bold text-[clamp(1.8rem,4vw,3rem)] text-[var(--text-primary)] mb-6 leading-tight">
-              Engineering Thinking.{' '}
-              <span className="gradient-text">Cinematic Vision.</span>
+              {headlineMain}{' '}
+              {headlineAccent && <span className="gradient-text">{headlineAccent}</span>}
             </h2>
             <div className="space-y-4 text-[var(--text-secondary)] leading-relaxed mb-8">
-              <p>
-                I&apos;m Silas Shaibu — a 3D visualization artist who sits at the intersection of
-                technical understanding and creative storytelling. I specialize in helping
-                manufacturers, engineering firms, and product brands communicate complex ideas
-                through high-end animation and CGI.
-              </p>
-              <p>
-                With deep expertise in Blender and an engineering-informed workflow, I bring
-                industrial accuracy to every frame — whether it&apos;s a conveyor system animation,
-                a product launch reveal, or a medical explainer.
-              </p>
-              <p>
-                My background in dental studies adds a unique edge in medical visualization — an
-                increasingly high-value niche in the 3D world.
-              </p>
+              {displayBio1 && <p>{displayBio1}</p>}
+              {displayBio2 && <p>{displayBio2}</p>}
+              {displayBio3 && <p>{displayBio3}</p>}
             </div>
 
             <div className="flex flex-wrap gap-2 mb-8">
-              {skills.map((skill) => (
-                <span
-                  key={skill}
-                  className="px-3 py-1.5 text-xs font-mono rounded-full border border-[var(--glass-border)] bg-[var(--glass-bg)] text-[var(--text-secondary)]"
-                >
+              {displaySkills.map((skill) => (
+                <span key={skill} className="px-3 py-1.5 text-xs font-mono rounded-full border border-[var(--glass-border)] bg-[var(--glass-bg)] text-[var(--text-secondary)]">
                   {skill}
                 </span>
               ))}
             </div>
 
             <div className="flex flex-wrap gap-4">
-              <Button variant="outline" href="/portfolio.pdf">
-                Download Portfolio PDF
-              </Button>
-              <Button variant="primary" href="#projects">
-                View All Projects
-              </Button>
+              <Button variant="outline" href={displayPdfUrl}>Download Portfolio PDF</Button>
+              <Button variant="primary" href="#projects">View All Projects</Button>
             </div>
           </ScrollReveal>
 
