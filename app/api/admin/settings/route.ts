@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { dbGetSettings, dbSetSetting } from '@/lib/admin-db';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   try {
     return NextResponse.json(await dbGetSettings(), {
