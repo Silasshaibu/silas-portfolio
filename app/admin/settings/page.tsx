@@ -1,30 +1,29 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
 import { Save, Plus, Trash2, GripVertical } from 'lucide-react';
 
 const input = "w-full px-4 py-2.5 rounded-lg bg-[#141414] border border-[var(--glass-border)] text-white placeholder:text-[var(--text-muted)] focus:border-[var(--accent-primary)] focus:outline-none text-sm";
-
-const coreFields = [
-  { key: 'email', label: 'Contact Email', placeholder: 'silasshaibu30bg@gmail.com' },
-  { key: 'tagline', label: 'Hero Tagline', placeholder: 'Bringing Engineering & Products to Life in 3D' },
-  { key: 'subtext', label: 'Hero Subtext', placeholder: 'I design cinematic 3D animations...' },
-];
 
 type ContactLink = { label: string; value: string; href: string };
 
 export default function AdminSettingsPage() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [saveError, setSaveError] = useState('');
+  const [email, setEmail] = useState('');
+  const [tagline, setTagline] = useState('');
+  const [subtext, setSubtext] = useState('');
   const [links, setLinks] = useState<ContactLink[]>([]);
-  const { register, handleSubmit, reset } = useForm();
 
   useEffect(() => {
-    fetch('/api/admin/settings', { cache: 'no-store' }).then(r => r.json()).then(data => {
-      reset(data);
-      try { setLinks(JSON.parse(data.contact_links ?? '[]')); } catch { setLinks([]); }
-    });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    fetch('/api/admin/settings', { cache: 'no-store' })
+      .then(r => r.json())
+      .then(data => {
+        setEmail(data.email ?? '');
+        setTagline(data.tagline ?? '');
+        setSubtext(data.subtext ?? '');
+        try { setLinks(JSON.parse(data.contact_links ?? '[]')); } catch { setLinks([]); }
+      });
   }, []);
 
   const addLink = () => setLinks(l => [...l, { label: '', value: '', href: '' }]);
@@ -32,15 +31,28 @@ export default function AdminSettingsPage() {
   const updateLink = (i: number, field: keyof ContactLink, val: string) =>
     setLinks(l => l.map((link, idx) => idx === i ? { ...link, [field]: val } : link));
 
-  const onSubmit = async (data: Record<string, string>) => {
-    setSaving(true); setSaved(false);
-    await fetch('/api/admin/settings', {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...data, contact_links: JSON.stringify(links) }),
-    });
-    setSaving(false); setSaved(true);
-    setTimeout(() => setSaved(false), 3000);
+  const handleSave = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSaving(true); setSaved(false); setSaveError('');
+    try {
+      const res = await fetch('/api/admin/settings', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          tagline,
+          subtext,
+          contact_links: JSON.stringify(links),
+        }),
+      });
+      if (!res.ok) throw new Error(`Server returned ${res.status}`);
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
+    } catch (err) {
+      setSaveError(err instanceof Error ? err.message : 'Save failed');
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -50,13 +62,19 @@ export default function AdminSettingsPage() {
         <p className="text-sm text-[var(--text-secondary)] mt-1">Update contact links and site content</p>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-        {coreFields.map(({ key, label, placeholder }) => (
-          <div key={key}>
-            <label className="block text-xs font-mono text-[var(--text-muted)] mb-2">{label}</label>
-            <input {...register(key)} className={input} placeholder={placeholder} />
-          </div>
-        ))}
+      <form onSubmit={handleSave} className="space-y-5">
+        <div>
+          <label className="block text-xs font-mono text-[var(--text-muted)] mb-2">Contact Email</label>
+          <input value={email} onChange={e => setEmail(e.target.value)} className={input} placeholder="silasshaibu30bg@gmail.com" />
+        </div>
+        <div>
+          <label className="block text-xs font-mono text-[var(--text-muted)] mb-2">Hero Tagline</label>
+          <input value={tagline} onChange={e => setTagline(e.target.value)} className={input} placeholder="Bringing Engineering & Products to Life in 3D" />
+        </div>
+        <div>
+          <label className="block text-xs font-mono text-[var(--text-muted)] mb-2">Hero Subtext</label>
+          <input value={subtext} onChange={e => setSubtext(e.target.value)} className={input} placeholder="I design cinematic 3D animations..." />
+        </div>
 
         <div className="pt-2">
           <div className="flex items-center justify-between mb-4">
@@ -118,6 +136,10 @@ export default function AdminSettingsPage() {
             ))}
           </div>
         </div>
+
+        {saveError && (
+          <p className="text-xs text-red-400 font-mono">{saveError}</p>
+        )}
 
         <button
           type="submit"
