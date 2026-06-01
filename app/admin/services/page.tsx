@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Pencil, Trash2, Plus, GripVertical, Eye, EyeOff } from 'lucide-react';
+import AdminSpinner from '@/components/admin/AdminSpinner';
 import {
   DndContext,
   closestCenter,
@@ -79,10 +80,13 @@ function SortableRow({ service, onDelete, onToggleDraft, editHref }: { service: 
 
 export default function AdminServicesPage() {
   const [services, setServices] = useState<Service[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const load = async () => {
+    setLoading(true);
     const res = await fetch('/api/admin/services');
     if (res.ok) setServices(await res.json());
+    setLoading(false);
   };
 
   useEffect(() => { load(); }, []);
@@ -127,7 +131,7 @@ export default function AdminServicesPage() {
         </Link>
       </div>
 
-      {services.length === 0 ? (
+      {loading ? <AdminSpinner label="Loading services..." /> : services.length === 0 ? (
         <div className="glass-card rounded-xl p-12 text-center">
           <p className="text-[var(--text-secondary)] text-sm">No services yet. Click &ldquo;Add New&rdquo; to create one.</p>
         </div>

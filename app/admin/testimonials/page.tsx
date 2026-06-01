@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Pencil, Trash2, Plus, GripVertical, Star } from 'lucide-react';
+import AdminSpinner from '@/components/admin/AdminSpinner';
 import {
   DndContext,
   closestCenter,
@@ -77,10 +78,13 @@ function SortableRow({ t, onDelete, editHref }: { t: Testimonial; onDelete: (id:
 
 export default function AdminTestimonialsPage() {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const load = async () => {
+    setLoading(true);
     const res = await fetch('/api/admin/testimonials');
     if (res.ok) setTestimonials(await res.json());
+    setLoading(false);
   };
 
   useEffect(() => { load(); }, []);
@@ -120,7 +124,7 @@ export default function AdminTestimonialsPage() {
         </Link>
       </div>
 
-      {testimonials.length === 0 ? (
+      {loading ? <AdminSpinner label="Loading testimonials..." /> : testimonials.length === 0 ? (
         <div className="glass-card rounded-xl p-12 text-center">
           <p className="text-[var(--text-secondary)] text-sm">No testimonials yet. Click &ldquo;Add New&rdquo; to create one.</p>
         </div>
