@@ -20,11 +20,12 @@ export default function AdminSettingsPage() {
   const { register, handleSubmit, reset } = useForm();
 
   useEffect(() => {
-    fetch('/api/admin/settings').then(r => r.json()).then(data => {
+    fetch('/api/admin/settings', { cache: 'no-store' }).then(r => r.json()).then(data => {
       reset(data);
       try { setLinks(JSON.parse(data.contact_links ?? '[]')); } catch { setLinks([]); }
     });
-  }, [reset]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const addLink = () => setLinks(l => [...l, { label: '', value: '', href: '' }]);
   const removeLink = (i: number) => setLinks(l => l.filter((_, idx) => idx !== i));

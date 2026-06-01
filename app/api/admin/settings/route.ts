@@ -3,7 +3,9 @@ import { dbGetSettings, dbSetSetting } from '@/lib/admin-db';
 
 export async function GET() {
   try {
-    return NextResponse.json(await dbGetSettings());
+    return NextResponse.json(await dbGetSettings(), {
+      headers: { 'Cache-Control': 'no-store' },
+    });
   } catch (e) {
     return NextResponse.json({ error: String(e) }, { status: 500 });
   }

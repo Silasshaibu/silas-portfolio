@@ -32,7 +32,7 @@ export default function Contact() {
   const [contactLinks, setContactLinks] = useState<ContactLink[]>([]);
 
   useEffect(() => {
-    fetch('/api/admin/settings')
+    fetch('/api/admin/settings', { cache: 'no-store' })
       .then(r => r.json())
       .then(data => {
         try { setContactLinks(JSON.parse(data.contact_links ?? '[]')); } catch { /* keep empty */ }

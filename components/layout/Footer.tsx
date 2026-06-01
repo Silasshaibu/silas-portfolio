@@ -9,7 +9,7 @@ export default function Footer() {
   const [links, setLinks] = useState<ContactLink[]>([]);
 
   useEffect(() => {
-    fetch('/api/admin/settings')
+    fetch('/api/admin/settings', { cache: 'no-store' })
       .then(r => r.json())
       .then(data => {
         try { setLinks(JSON.parse(data.contact_links ?? '[]')); } catch { /* keep empty */ }
