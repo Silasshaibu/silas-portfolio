@@ -48,28 +48,28 @@ const testimonials: Testimonial[] = [
 
 const PER_PAGE = 3;
 
-const countryFlags: Record<string, string> = {
-  'Switzerland': '🇨🇭',
-  'United States': '🇺🇸',
-  'Israel': '🇮🇱',
-  'United Kingdom': '🇬🇧',
-  'Nigeria': '🇳🇬',
-  'Saudi Arabia': '🇸🇦',
-  'Turkey': '🇹🇷',
-  'Germany': '🇩🇪',
-  'Canada': '🇨🇦',
-  'Oman': '🇴🇲',
-  'France': '🇫🇷',
-  'Morocco': '🇲🇦',
-  'India': '🇮🇳',
-  'Australia': '🇦🇺',
+const countryCodeMap: Record<string, string> = {
+  'Switzerland': 'ch',
+  'United States': 'us',
+  'Israel': 'il',
+  'United Kingdom': 'gb',
+  'Nigeria': 'ng',
+  'Saudi Arabia': 'sa',
+  'Turkey': 'tr',
+  'Germany': 'de',
+  'Canada': 'ca',
+  'Oman': 'om',
+  'France': 'fr',
+  'Morocco': 'ma',
+  'India': 'in',
+  'Australia': 'au',
 };
 
-function formatCompany(company: string) {
+function parseCompany(company: string): { service: string; country: string; flagCode: string } {
   const parts = company.split(' · ');
-  if (parts.length < 2) return { service: company, flag: '' };
+  if (parts.length < 2) return { service: company, country: '', flagCode: '' };
   const country = parts[parts.length - 1].trim();
-  return { service: parts[0].trim(), flag: countryFlags[country] ?? country };
+  return { service: parts[0].trim(), country, flagCode: countryCodeMap[country] ?? '' };
 }
 
 const platformColors: Record<string, string> = {
@@ -147,11 +147,24 @@ export default function Testimonials() {
                   <p className="text-sm text-[var(--text-secondary)] leading-relaxed flex-1 mb-6">
                     &ldquo;{t.quote}&rdquo;
                   </p>
-                  {(() => { const { service, flag } = formatCompany(t.company); return (
+                  {(() => { const { service, flagCode } = parseCompany(t.company); return (
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-[var(--text-primary)]">{t.name}</p>
-                      <p className="text-xs text-[var(--text-muted)]">{service} {flag && <span className="text-base leading-none">{flag}</span>}</p>
+                      <div className="flex items-center gap-1.5">
+                        <p className="text-sm font-medium text-[var(--text-primary)]">{t.name}</p>
+                        {flagCode && (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={`https://flagcdn.com/w20/${flagCode}.png`}
+                            srcSet={`https://flagcdn.com/w40/${flagCode}.png 2x`}
+                            width={20}
+                            height={15}
+                            alt={flagCode.toUpperCase()}
+                            className="rounded-sm object-cover"
+                          />
+                        )}
+                      </div>
+                      <p className="text-xs text-[var(--text-muted)]">{service}</p>
                     </div>
                     <span className={`text-xs px-2 py-1 rounded-full font-mono ${platformColors[t.platform]}`}>
                       {t.platform}
