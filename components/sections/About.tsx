@@ -2,7 +2,7 @@ import SectionLabel from '@/components/ui/SectionLabel';
 import Button from '@/components/ui/Button';
 import ScrollReveal from '@/components/animations/ScrollReveal';
 
-const DEFAULT_SKILLS = ['Blender', 'After Effects', 'Product Visualization', 'Industrial Animation', 'Medical Animation', 'Motion Graphics', 'Houdini (learning)', 'Unreal Engine (learning)'];
+const DEFAULT_SKILLS = ['Blender', 'After Effects', 'Product Visualization', 'Industrial Animation', 'Medical Animation', 'Motion Graphics'];
 
 interface AboutProps {
   headline?: string;
@@ -19,7 +19,7 @@ export default function About({ headline, bio1, bio2, bio3, skills, pdfUrl }: Ab
   const displayBio2 = bio2 || "With deep expertise in Blender and an engineering-informed workflow, I bring industrial accuracy to every frame — whether it's a conveyor system animation, a product launch reveal, or a medical explainer.";
   const displayBio3 = bio3 || 'My background in dental studies adds a unique edge in medical visualization — an increasingly high-value niche in the 3D world.';
   const displaySkills = (skills && skills.length > 0) ? skills : DEFAULT_SKILLS;
-  const displayPdfUrl = pdfUrl || '/portfolio.pdf';
+  const displayPdfUrl = pdfUrl || '/api/portfolio-pdf';
 
   const [headlineMain, headlineAccent] = displayHeadline.includes('.')
     ? [displayHeadline.split('.')[0].trim() + '.', displayHeadline.split('.').slice(1).join('.').trim()]

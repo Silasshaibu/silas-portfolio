@@ -53,7 +53,8 @@ export default function AdminSettingsPage() {
   const [aboutBio1, setAboutBio1] = useState('');
   const [aboutBio2, setAboutBio2] = useState('');
   const [aboutBio3, setAboutBio3] = useState('');
-  const [aboutSkills, setAboutSkills] = useState('');
+  const [aboutSkills, setAboutSkills] = useState<string[]>([]);
+  const [newSkill, setNewSkill] = useState('');
   const [aboutPdfUrl, setAboutPdfUrl] = useState('');
 
   // Contact
@@ -74,7 +75,7 @@ export default function AdminSettingsPage() {
         setAboutBio1(data.about_bio_1 ?? '');
         setAboutBio2(data.about_bio_2 ?? '');
         setAboutBio3(data.about_bio_3 ?? '');
-        try { setAboutSkills(JSON.parse(data.about_skills ?? '[]').join(', ')); } catch { setAboutSkills(''); }
+        try { setAboutSkills(JSON.parse(data.about_skills ?? '[]')); } catch { setAboutSkills([]); }
         setAboutPdfUrl(data.about_pdf_url ?? '');
         setEmail(data.email ?? '');
         try { setLinks(JSON.parse(data.contact_links ?? '[]')); } catch { setLinks([]); }
@@ -96,7 +97,6 @@ export default function AdminSettingsPage() {
     e.preventDefault();
     setSaving(true); setSaved(false); setSaveError('');
     try {
-      const skillsArr = aboutSkills.split(',').map(s => s.trim()).filter(Boolean);
       const res = await fetch('/api/admin/settings', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -111,7 +111,7 @@ export default function AdminSettingsPage() {
           about_bio_1: aboutBio1,
           about_bio_2: aboutBio2,
           about_bio_3: aboutBio3,
-          about_skills: JSON.stringify(skillsArr),
+          about_skills: JSON.stringify(aboutSkills.filter(Boolean)),
           about_pdf_url: aboutPdfUrl,
           email,
           contact_links: JSON.stringify(links),
@@ -193,9 +193,41 @@ export default function AdminSettingsPage() {
           <Field label="Bio Paragraph 3">
             <textarea value={aboutBio3} onChange={e => setAboutBio3(e.target.value)} rows={3} className={textarea} placeholder="Third paragraph of your bio..." />
           </Field>
-          <Field label="Skills (comma-separated)">
-            <input value={aboutSkills} onChange={e => setAboutSkills(e.target.value)} className={input} placeholder="Blender, After Effects, Product Visualization..." />
-          </Field>
+          <div>
+            <label className="block text-xs font-mono text-[var(--text-muted)] mb-2">Skills / Tags</label>
+            <div className="flex flex-wrap gap-2 mb-3">
+              {aboutSkills.map((skill, i) => (
+                <span key={i} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[var(--glass-border)] bg-[var(--glass-bg)] text-xs text-[var(--text-secondary)] font-mono">
+                  {skill}
+                  <button
+                    type="button"
+                    onClick={() => setAboutSkills(s => s.filter((_, idx) => idx !== i))}
+                    className="text-[var(--text-muted)] hover:text-red-400 transition-colors leading-none"
+                    aria-label={`Remove ${skill}`}
+                  >×</button>
+                </span>
+              ))}
+              {aboutSkills.length === 0 && (
+                <p className="text-xs text-[var(--text-muted)]">No skills yet — add one below.</p>
+              )}
+            </div>
+            <div className="flex gap-2">
+              <input
+                value={newSkill}
+                onChange={e => setNewSkill(e.target.value)}
+                onKeyDown={e => {
+                  if (e.key === 'Enter') { e.preventDefault(); if (newSkill.trim()) { setAboutSkills(s => [...s, newSkill.trim()]); setNewSkill(''); } }
+                }}
+                className={input}
+                placeholder="Type a skill and press Enter..."
+              />
+              <button
+                type="button"
+                onClick={() => { if (newSkill.trim()) { setAboutSkills(s => [...s, newSkill.trim()]); setNewSkill(''); } }}
+                className="px-4 py-2 rounded-lg bg-[rgba(0,212,255,0.1)] border border-[rgba(0,212,255,0.2)] text-[var(--accent-primary)] text-xs font-mono hover:bg-[rgba(0,212,255,0.15)] transition-colors flex-shrink-0"
+              >+ Add</button>
+            </div>
+          </div>
           <Field label="Portfolio PDF URL">
             <input value={aboutPdfUrl} onChange={e => setAboutPdfUrl(e.target.value)} className={input} placeholder="/portfolio.pdf" />
           </Field>

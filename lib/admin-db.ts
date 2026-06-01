@@ -221,8 +221,8 @@ const SETTING_DEFAULTS: Record<string, string> = {
   about_bio_1: "I'm Silas Shaibu — a 3D visualization artist who sits at the intersection of technical understanding and creative storytelling. I specialize in helping manufacturers, engineering firms, and product brands communicate complex ideas through high-end animation and CGI.",
   about_bio_2: "With deep expertise in Blender and an engineering-informed workflow, I bring industrial accuracy to every frame — whether it's a conveyor system animation, a product launch reveal, or a medical explainer.",
   about_bio_3: 'My background in dental studies adds a unique edge in medical visualization — an increasingly high-value niche in the 3D world.',
-  about_skills: JSON.stringify(['Blender', 'After Effects', 'Product Visualization', 'Industrial Animation', 'Medical Animation', 'Motion Graphics', 'Houdini (learning)', 'Unreal Engine (learning)']),
-  about_pdf_url: '/portfolio.pdf',
+  about_skills: JSON.stringify(['Blender', 'After Effects', 'Product Visualization', 'Industrial Animation', 'Medical Animation', 'Motion Graphics']),
+  about_pdf_url: '/api/portfolio-pdf',
 };
 
 // Settings
