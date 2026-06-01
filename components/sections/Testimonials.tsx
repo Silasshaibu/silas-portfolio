@@ -174,17 +174,18 @@ export default function Testimonials() {
           </button>
         </div>
 
-        {/* 3 dots */}
+        {/* 3 dots — active pill grows/shrinks with CSS transition */}
         <div className="flex items-center justify-center gap-2 mb-14">
           {[0, 1, 2].map((dot) => {
-            const isActive =
-              (dot === 0 && page === 0) ||
-              (dot === 2 && page === totalPages - 1) ||
-              (dot === 1 && page > 0 && page < totalPages - 1);
+            const activeDot =
+              page === 0 ? 0 :
+              page === totalPages - 1 ? 2 :
+              1;
+            const isActive = dot === activeDot;
             return (
               <span
                 key={dot}
-                className={`rounded-full transition-all duration-300 ${isActive ? 'w-4 h-2 bg-[var(--accent-primary)]' : 'w-2 h-2 bg-[var(--text-muted)]'}`}
+                className={`h-2 rounded-full transition-all duration-300 ease-in-out ${isActive ? 'w-5 bg-[var(--accent-primary)]' : 'w-2 bg-[var(--text-muted)]'}`}
               />
             );
           })}
