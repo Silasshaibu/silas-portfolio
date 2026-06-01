@@ -133,9 +133,8 @@ export default function Testimonials() {
           <button
             type="button"
             onClick={() => setPage((p) => Math.max(0, p - 1))}
-            disabled={page === 0}
-            className="flex-shrink-0 p-2 rounded-full glass-card disabled:opacity-30 hover:text-[var(--accent-primary)] transition-colors"
             aria-label="Previous"
+            className={`flex-shrink-0 p-2 rounded-full glass-card hover:text-[var(--accent-primary)] transition-colors ${page === 0 ? 'invisible' : ''}`}
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
@@ -168,9 +167,8 @@ export default function Testimonials() {
           <button
             type="button"
             onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
-            disabled={page === totalPages - 1}
-            className="flex-shrink-0 p-2 rounded-full glass-card disabled:opacity-30 hover:text-[var(--accent-primary)] transition-colors"
             aria-label="Next"
+            className={`flex-shrink-0 p-2 rounded-full glass-card hover:text-[var(--accent-primary)] transition-colors ${page === totalPages - 1 ? 'invisible' : ''}`}
           >
             <ChevronRight className="w-5 h-5" />
           </button>
