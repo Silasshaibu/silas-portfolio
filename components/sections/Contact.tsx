@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { Mail, ExternalLink, Send, CheckCircle, AlertCircle } from 'lucide-react';
+import { Mail, MessageSquare, ExternalLink, Send, CheckCircle, AlertCircle, type LucideIcon } from 'lucide-react';
 import SectionLabel from '@/components/ui/SectionLabel';
 import ScrollReveal from '@/components/animations/ScrollReveal';
 import type { ContactFormData } from '@/types';
@@ -17,29 +17,28 @@ const projectTypes = [
   'Other',
 ];
 
-const contactLinks = [
-  {
-    icon: Mail,
-    label: 'Email',
-    value: 'silasshaibu30bg@gmail.com',
-    href: 'mailto:silasshaibu30bg@gmail.com',
-  },
-  {
-    icon: ExternalLink,
-    label: 'Fiverr',
-    value: 'fiverr.com/silasshaibu',
-    href: 'https://fiverr.com',
-  },
-  {
-    icon: ExternalLink,
-    label: 'LinkedIn',
-    value: 'linkedin.com/in/silasshaibu',
-    href: 'https://linkedin.com',
-  },
-];
+type ContactLink = { label: string; value: string; href: string };
+
+const iconMap: Record<string, LucideIcon> = {
+  Email: Mail,
+  WhatsApp: MessageSquare,
+};
+function getLinkIcon(label: string): LucideIcon {
+  return iconMap[label] ?? ExternalLink;
+}
 
 export default function Contact() {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [contactLinks, setContactLinks] = useState<ContactLink[]>([]);
+
+  useEffect(() => {
+    fetch('/api/admin/settings')
+      .then(r => r.json())
+      .then(data => {
+        try { setContactLinks(JSON.parse(data.contact_links ?? '[]')); } catch { /* keep empty */ }
+      })
+      .catch(() => { /* keep empty */ });
+  }, []);
 
   const {
     register,
@@ -96,7 +95,7 @@ export default function Contact() {
                   className="flex items-center gap-4 p-4 glass-card rounded-xl hover:border-[rgba(0,212,255,0.2)] hover:-translate-y-0.5 transition-all duration-200 group"
                 >
                   <div className="w-9 h-9 rounded-lg bg-[rgba(0,212,255,0.1)] flex items-center justify-center flex-shrink-0 group-hover:bg-[rgba(0,212,255,0.15)] transition-colors">
-                    <link.icon className="w-4 h-4 text-[var(--accent-primary)]" />
+                    {(() => { const Icon = getLinkIcon(link.label); return <Icon className="w-4 h-4 text-[var(--accent-primary)]" />; })()}
                   </div>
                   <div>
                     <p className="text-xs text-[var(--text-muted)] font-mono">{link.label}</p>

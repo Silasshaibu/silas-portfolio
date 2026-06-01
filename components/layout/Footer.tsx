@@ -1,6 +1,24 @@
+'use client';
+
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
+
+type ContactLink = { label: string; value: string; href: string };
 
 export default function Footer() {
+  const [links, setLinks] = useState<ContactLink[]>([]);
+
+  useEffect(() => {
+    fetch('/api/admin/settings')
+      .then(r => r.json())
+      .then(data => {
+        try { setLinks(JSON.parse(data.contact_links ?? '[]')); } catch { /* keep empty */ }
+      })
+      .catch(() => { /* keep empty */ });
+  }, []);
+
+  const externalLinks = links.filter(l => !l.href.startsWith('mailto'));
+
   return (
     <footer className="border-t border-[var(--border-subtle)] bg-[var(--bg-primary)]">
       <div className="max-w-7xl mx-auto px-6 py-12">
@@ -22,26 +40,22 @@ export default function Footer() {
             ))}
           </nav>
 
-          <div className="flex items-center gap-4">
-            <a
-              href="https://fiverr.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs font-mono text-[var(--text-muted)] hover:text-[var(--accent-primary)] transition-colors"
-              aria-label="Fiverr"
-            >
-              Fiverr
-            </a>
-            <a
-              href="https://linkedin.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs font-mono text-[var(--text-muted)] hover:text-[var(--accent-primary)] transition-colors"
-              aria-label="LinkedIn"
-            >
-              LinkedIn
-            </a>
-          </div>
+          {externalLinks.length > 0 && (
+            <div className="flex items-center gap-4">
+              {externalLinks.map(link => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs font-mono text-[var(--text-muted)] hover:text-[var(--accent-primary)] transition-colors"
+                  aria-label={link.label}
+                >
+                  {link.label}
+                </a>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="mt-8 pt-8 border-t border-[var(--border-subtle)] text-center">
