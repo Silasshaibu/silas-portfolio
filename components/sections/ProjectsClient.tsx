@@ -47,7 +47,7 @@ export default function ProjectsClient({ projects }: { projects: Project[] }) {
           </h2>
         </ScrollReveal>
 
-        <ScrollReveal delay={0.1} className="mb-4 md:mb-10">
+        <ScrollReveal delay={0.1} className="mb-0 md:mb-10">
           <div
             ref={tabsRef}
             className="relative flex gap-2 overflow-x-auto lg:overflow-visible lg:gap-0 lg:inline-flex border border-[var(--glass-border)] rounded-xl p-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
