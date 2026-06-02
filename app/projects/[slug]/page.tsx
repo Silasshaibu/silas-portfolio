@@ -51,7 +51,7 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
         <div className="flex flex-col lg:flex-row lg:h-[calc(100vh-4rem)]">
 
           {/* ── Left sidebar: text & metadata ── */}
-          <aside className="lg:w-[28%] lg:h-full lg:overflow-y-auto border-b lg:border-b-0 lg:border-r border-[var(--border-subtle)] order-2 lg:order-1">
+          <aside data-lenis-prevent className="lg:w-[28%] lg:h-full lg:overflow-y-auto border-b lg:border-b-0 lg:border-r border-[var(--border-subtle)] order-2 lg:order-1">
             <div className="p-6 space-y-6">
 
               {/* Back + category */}
@@ -130,7 +130,7 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
           </aside>
 
           {/* ── Right panel: visuals ── */}
-          <div className="lg:w-[72%] lg:h-full lg:overflow-y-auto order-1 lg:order-2">
+          <div data-lenis-prevent className="lg:w-[72%] lg:h-full lg:overflow-y-auto order-1 lg:order-2">
             <div className="p-6 space-y-6">
 
               {/* Comparison slider */}
