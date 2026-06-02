@@ -128,18 +128,18 @@ export default function Testimonials() {
         </ScrollReveal>
 
         {/* Cards + side arrows */}
-        <div className="relative flex items-center gap-4 mb-8">
-          {/* Left arrow — vertically centered beside cards */}
+        <div className="relative mb-8 px-10">
+          {/* Left arrow — absolute left, vertically centered */}
           <button
             type="button"
             onClick={() => setPage((p) => Math.max(0, p - 1))}
             aria-label="Previous"
-            className={`flex-shrink-0 p-2 rounded-full glass-card hover:text-[var(--accent-primary)] transition-colors ${page === 0 ? 'invisible' : ''}`}
+            className={`absolute left-0 top-1/2 -translate-y-1/2 p-2 rounded-full glass-card hover:text-[var(--accent-primary)] transition-colors z-10 ${page === 0 ? 'invisible' : ''}`}
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 flex-1">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {visible.map((t, i) => (
               <ScrollReveal key={t.id} delay={i * 0.1}>
                 <div className="glass-card rounded-xl p-6 h-full flex flex-col">
@@ -174,12 +174,12 @@ export default function Testimonials() {
             ))}
           </div>
 
-          {/* Right arrow — vertically centered beside cards */}
+          {/* Right arrow — absolute right, vertically centered */}
           <button
             type="button"
             onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
             aria-label="Next"
-            className={`flex-shrink-0 p-2 rounded-full glass-card hover:text-[var(--accent-primary)] transition-colors ${page === totalPages - 1 ? 'invisible' : ''}`}
+            className={`absolute right-0 top-1/2 -translate-y-1/2 p-2 rounded-full glass-card hover:text-[var(--accent-primary)] transition-colors z-10 ${page === totalPages - 1 ? 'invisible' : ''}`}
           >
             <ChevronRight className="w-5 h-5" />
           </button>
