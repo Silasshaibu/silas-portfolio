@@ -76,7 +76,7 @@ export default function ComparisonSlider({
         {/* Drag handle */}
         <div
           className="absolute top-0 bottom-0 z-20 flex items-center justify-center"
-          style={{ left: `${pos}%`, transform: 'translateX(-50%)' }}
+          style={{ left: `clamp(20px, ${pos}%, calc(100% - 20px))`, transform: 'translateX(-50%)' }}
           onMouseDown={onMouseDown}
           onTouchStart={onTouchStart}
         >
