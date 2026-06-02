@@ -66,9 +66,10 @@ export default function ProjectCard({ project }: ProjectCardProps) {
   );
 
   return (
-    <div
+    <Link
       ref={cardRef}
-      className="relative rounded-xl overflow-hidden cursor-pointer aspect-[4/3]"
+      href={`/projects/${project.slug}`}
+      className="relative rounded-xl overflow-hidden cursor-pointer aspect-[4/3] block"
       style={{ willChange: 'transform' }}
     >
       <div
@@ -96,17 +97,14 @@ export default function ProjectCard({ project }: ProjectCardProps) {
         <p className="text-sm text-[var(--text-secondary)] mb-4 line-clamp-2">
           {project.description}
         </p>
-        <Link
-          href={`/projects/${project.slug}`}
-          className="inline-flex items-center gap-2 text-sm text-[var(--accent-primary)] hover:gap-3 transition-all duration-200"
-        >
+        <span className="inline-flex items-center gap-2 text-sm text-[var(--accent-primary)] group-hover:gap-3 transition-all duration-200">
           View Case Study <ArrowRight className="w-4 h-4" />
-        </Link>
+        </span>
       </div>
 
       <div ref={staticTitleRef} className="absolute bottom-4 left-4">
         <h3 className="font-grotesk font-semibold text-sm text-white/80">{project.title}</h3>
       </div>
-    </div>
+    </Link>
   );
 }
