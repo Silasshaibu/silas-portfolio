@@ -95,7 +95,7 @@ export default function Hero({ overline, tagline, subtext, stats }: HeroProps) {
         </div>
       </div>
 
-      <div ref={scrollRef} className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce-arrow">
+      <div ref={scrollRef} className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden sm:flex flex-col items-center gap-2 animate-bounce-arrow">
         <span className="text-xs font-mono text-[var(--text-muted)] tracking-widest">SCROLL</span>
         <ChevronDown className="w-5 h-5 text-[var(--text-muted)]" />
       </div>
