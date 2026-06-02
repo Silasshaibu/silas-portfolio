@@ -3,8 +3,23 @@
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { ArrowLeft, Save, Plus, Trash2 } from 'lucide-react';
+import { ArrowLeft, Save, Plus, Trash2, GripVertical } from 'lucide-react';
 import Link from 'next/link';
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+  useSortable,
+  arrayMove,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import type { GalleryItem } from '@/types';
 
 interface ProjectFormData {
@@ -31,20 +46,39 @@ interface Props {
   initialGallery?: GalleryItem[];
 }
 
+// Gallery item with a stable client-only id for drag-and-drop.
+type GItem = GalleryItem & { _uid: string };
+let uidCounter = 0;
+const newUid = () => `g${Date.now()}_${uidCounter++}`;
+
 export default function ProjectForm({ defaultValues, projectId, initialGallery }: Props) {
   const router = useRouter();
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
-  const [gallery, setGallery] = useState<GalleryItem[]>(initialGallery ?? []);
+  const [gallery, setGallery] = useState<GItem[]>(
+    (initialGallery ?? []).map((it) => ({ ...it, _uid: newUid() }))
+  );
 
   const { register, handleSubmit, formState: { errors } } = useForm<ProjectFormData>({
     defaultValues: defaultValues ?? { category: 'industrial', featured: false, sortOrder: 0 },
   });
 
-  const addItem = () => setGallery((g) => [...g, { type: 'image', url: '' }]);
-  const removeItem = (i: number) => setGallery((g) => g.filter((_, idx) => idx !== i));
-  const updateItem = (i: number, patch: Partial<GalleryItem>) =>
-    setGallery((g) => g.map((item, idx) => (idx === i ? { ...item, ...patch } : item)));
+  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
+
+  const addItem = () => setGallery((g) => [...g, { type: 'image', url: '', _uid: newUid() }]);
+  const removeItem = (uid: string) => setGallery((g) => g.filter((it) => it._uid !== uid));
+  const updateItem = (uid: string, patch: Partial<GalleryItem>) =>
+    setGallery((g) => g.map((it) => (it._uid === uid ? { ...it, ...patch } : it)));
+
+  const onDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+    setGallery((g) => {
+      const from = g.findIndex((it) => it._uid === active.id);
+      const to = g.findIndex((it) => it._uid === over.id);
+      return arrayMove(g, from, to);
+    });
+  };
 
   const onSubmit = async (data: ProjectFormData) => {
     setSaving(true);
@@ -53,7 +87,10 @@ export default function ProjectForm({ defaultValues, projectId, initialGallery }
       ...data,
       tools: data.tools.split(',').map((t) => t.trim()).filter(Boolean),
       sortOrder: Number(data.sortOrder),
-      gallery: gallery.filter((item) => item.url.trim() !== ''),
+      // strip the client-only _uid before saving
+      gallery: gallery
+        .filter((item) => item.url.trim() !== '')
+        .map(({ _uid, ...item }) => item), // eslint-disable-line @typescript-eslint/no-unused-vars
     };
     try {
       const res = await fetch(
@@ -164,7 +201,7 @@ export default function ProjectForm({ defaultValues, projectId, initialGallery }
           <div className="flex items-center justify-between mb-3">
             <div>
               <h2 className="text-sm font-semibold text-white font-grotesk">Gallery Media</h2>
-              <p className="text-xs text-[var(--text-muted)] mt-0.5">Extra images, videos, and comparison sliders shown on the project page</p>
+              <p className="text-xs text-[var(--text-muted)] mt-0.5">Drag to reorder how they appear on the project page. Extra images, videos, and comparison sliders.</p>
             </div>
             <button
               type="button"
@@ -181,70 +218,15 @@ export default function ProjectForm({ defaultValues, projectId, initialGallery }
             </p>
           )}
 
-          <div className="space-y-4">
-            {gallery.map((item, i) => (
-              <div key={i} className={`p-4 rounded-lg bg-[#0e0e0e] border border-[var(--glass-border)] space-y-3 ${item.draft ? 'opacity-60' : ''}`}>
-                <div className="flex items-center gap-2">
-                  <select
-                    value={item.type}
-                    onChange={(e) => updateItem(i, { type: e.target.value as GalleryItem['type'] })}
-                    className={input + ' max-w-[150px]'}
-                    aria-label="Media type"
-                  >
-                    <option value="image">Image</option>
-                    <option value="video">Video</option>
-                    <option value="compare">Comparison</option>
-                  </select>
-                  <label className="flex items-center gap-2 text-xs text-[var(--text-secondary)] cursor-pointer ml-auto">
-                    <input
-                      type="checkbox"
-                      checked={!!item.draft}
-                      onChange={(e) => updateItem(i, { draft: e.target.checked })}
-                      className="w-4 h-4 rounded accent-yellow-400"
-                    />
-                    <span className="font-mono">{item.draft ? 'Draft' : 'Live'}</span>
-                  </label>
-                  <button type="button" onClick={() => removeItem(i)} className="p-2 rounded-lg text-red-400 hover:bg-red-400/10 transition-colors" title="Remove media">
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
-
-                <input
-                  value={item.url}
-                  onChange={(e) => updateItem(i, { url: e.target.value })}
-                  className={input}
-                  placeholder={item.type === 'video' ? 'Video URL (Vimeo/YouTube)' : item.type === 'compare' ? 'Left image URL' : 'Image URL'}
-                />
-                {item.type === 'compare' && (
-                  <input
-                    value={item.urlB ?? ''}
-                    onChange={(e) => updateItem(i, { urlB: e.target.value })}
-                    className={input}
-                    placeholder="Right image URL"
-                  />
-                )}
-                {item.type === 'compare' && (
-                  <div className="grid grid-cols-2 gap-3">
-                    <input value={item.leftLabel ?? ''} onChange={(e) => updateItem(i, { leftLabel: e.target.value })} className={input} placeholder="Left badge (e.g. WIREFRAME)" />
-                    <input value={item.rightLabel ?? ''} onChange={(e) => updateItem(i, { rightLabel: e.target.value })} className={input} placeholder="Right badge (e.g. RENDER)" />
-                  </div>
-                )}
-                <input
-                  value={item.label ?? ''}
-                  onChange={(e) => updateItem(i, { label: e.target.value })}
-                  className={input}
-                  placeholder={item.type === 'compare' ? 'Heading (e.g. Wireframe vs Render)' : 'Label (optional)'}
-                />
-                <textarea
-                  value={item.caption ?? ''}
-                  onChange={(e) => updateItem(i, { caption: e.target.value })}
-                  rows={2}
-                  className={input}
-                  placeholder="Short description shown under the media (optional)"
-                />
+          <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={onDragEnd}>
+            <SortableContext items={gallery.map((it) => it._uid)} strategy={verticalListSortingStrategy}>
+              <div className="space-y-4">
+                {gallery.map((item) => (
+                  <SortableMediaCard key={item._uid} item={item} updateItem={updateItem} removeItem={removeItem} />
+                ))}
               </div>
-            ))}
-          </div>
+            </SortableContext>
+          </DndContext>
         </div>
 
         {error && <p className="text-xs text-red-400 bg-red-400/10 border border-red-400/20 rounded-lg px-3 py-2">{error}</p>}
@@ -258,6 +240,94 @@ export default function ProjectForm({ defaultValues, projectId, initialGallery }
           {saving ? 'Saving...' : 'Save Project'}
         </button>
       </form>
+    </div>
+  );
+}
+
+function SortableMediaCard({
+  item,
+  updateItem,
+  removeItem,
+}: {
+  item: GItem;
+  updateItem: (uid: string, patch: Partial<GalleryItem>) => void;
+  removeItem: (uid: string) => void;
+}) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: item._uid });
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={{ transform: CSS.Transform.toString(transform), transition, opacity: isDragging ? 0.5 : 1 }}
+      className={`p-4 rounded-lg bg-[#0e0e0e] border border-[var(--glass-border)] space-y-3 ${item.draft ? 'opacity-60' : ''}`}
+    >
+      <div className="flex items-center gap-2">
+        <button
+          type="button"
+          className="cursor-grab active:cursor-grabbing text-[var(--text-muted)] hover:text-[var(--accent-primary)] transition-colors touch-none"
+          {...attributes}
+          {...listeners}
+          aria-label="Drag to reorder"
+        >
+          <GripVertical className="w-4 h-4" />
+        </button>
+        <select
+          value={item.type}
+          onChange={(e) => updateItem(item._uid, { type: e.target.value as GalleryItem['type'] })}
+          className={input + ' max-w-[150px]'}
+          aria-label="Media type"
+        >
+          <option value="image">Image</option>
+          <option value="video">Video</option>
+          <option value="compare">Comparison</option>
+        </select>
+        <label className="flex items-center gap-2 text-xs text-[var(--text-secondary)] cursor-pointer ml-auto">
+          <input
+            type="checkbox"
+            checked={!!item.draft}
+            onChange={(e) => updateItem(item._uid, { draft: e.target.checked })}
+            className="w-4 h-4 rounded accent-yellow-400"
+          />
+          <span className="font-mono">{item.draft ? 'Draft' : 'Live'}</span>
+        </label>
+        <button type="button" onClick={() => removeItem(item._uid)} className="p-2 rounded-lg text-red-400 hover:bg-red-400/10 transition-colors" title="Remove media">
+          <Trash2 className="w-4 h-4" />
+        </button>
+      </div>
+
+      <input
+        value={item.url}
+        onChange={(e) => updateItem(item._uid, { url: e.target.value })}
+        className={input}
+        placeholder={item.type === 'video' ? 'Video URL (Vimeo/YouTube)' : item.type === 'compare' ? 'Left image URL' : 'Image URL'}
+      />
+      {item.type === 'compare' && (
+        <input
+          value={item.urlB ?? ''}
+          onChange={(e) => updateItem(item._uid, { urlB: e.target.value })}
+          className={input}
+          placeholder="Right image URL"
+        />
+      )}
+      {item.type === 'compare' && (
+        <div className="grid grid-cols-2 gap-3">
+          <input value={item.leftLabel ?? ''} onChange={(e) => updateItem(item._uid, { leftLabel: e.target.value })} className={input} placeholder="Left badge (e.g. WIREFRAME)" />
+          <input value={item.rightLabel ?? ''} onChange={(e) => updateItem(item._uid, { rightLabel: e.target.value })} className={input} placeholder="Right badge (e.g. RENDER)" />
+        </div>
+      )}
+      <input
+        value={item.label ?? ''}
+        onChange={(e) => updateItem(item._uid, { label: e.target.value })}
+        className={input}
+        placeholder={item.type === 'compare' ? 'Heading (e.g. Wireframe vs Render)' : 'Label (optional)'}
+      />
+      <textarea
+        value={item.caption ?? ''}
+        onChange={(e) => updateItem(item._uid, { caption: e.target.value })}
+        rows={2}
+        className={input}
+        placeholder="Short description shown under the media (optional)"
+      />
     </div>
   );
 }
