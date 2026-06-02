@@ -65,18 +65,20 @@ export default function ProjectVisuals({ wireframeUrl, renderUrl, videoUrl, gall
 
   return (
     <div className="relative">
-      <div className="relative space-y-6">
-        {hasVisuals && (
+      {hasVisuals && (
+        <div className="flex justify-end mb-3">
           <button
             type="button"
             onClick={() => setOpen(true)}
             aria-label="Maximize visuals"
             title="View fullscreen"
-            className="absolute top-3 right-3 z-40 p-2 rounded-lg bg-[var(--bg-card)]/90 border border-[var(--glass-border)] text-[var(--text-secondary)] hover:text-[var(--accent-primary)] hover:border-[rgba(0,212,255,0.3)] backdrop-blur-sm transition-colors"
+            className="relative z-50 p-2 rounded-lg bg-[var(--bg-card)]/90 border border-[var(--glass-border)] backdrop-blur-sm text-[var(--text-secondary)] hover:text-[var(--accent-primary)] hover:border-[rgba(0,212,255,0.3)] transition-colors"
           >
             <Maximize2 className="w-4 h-4" />
           </button>
-        )}
+        </div>
+      )}
+      <div className="space-y-6">
         {visuals}
       </div>
 
