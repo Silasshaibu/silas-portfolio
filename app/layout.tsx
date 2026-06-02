@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Space_Grotesk, Inter, Space_Mono } from 'next/font/google';
 import './globals.css';
 import LenisProvider from '@/components/animations/LenisProvider';
+import MediaPrefetcher from '@/components/ui/MediaPrefetcher';
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ['latin'],
@@ -55,6 +56,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         className={`${spaceGrotesk.variable} ${inter.variable} ${spaceMono.variable} bg-[#080808] text-[#f0f0f0] overflow-x-hidden`}
       >
         <LenisProvider>{children}</LenisProvider>
+        <MediaPrefetcher />
       </body>
     </html>
   );

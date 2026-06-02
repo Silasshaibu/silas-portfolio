@@ -97,6 +97,7 @@ export default function TestimonialsCarousel({ items }: { items: Testimonial[] }
                             src={`https://flagcdn.com/w20/${flagCode}.png`}
                             srcSet={`https://flagcdn.com/w40/${flagCode}.png 2x`}
                             alt={country}
+                            loading="lazy"
                             className="rounded-sm object-cover flex-shrink-0 h-[13px] w-auto"
                           />
                         )}
