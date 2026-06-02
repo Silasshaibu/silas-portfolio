@@ -15,7 +15,7 @@ export default function ShowReel({ vimeoId, stats }: ShowReelProps) {
   return (
     <section id="showreel" className="py-24 lg:py-32 bg-[var(--bg-secondary)]">
       <div className="max-w-6xl mx-auto">
-        <ScrollReveal className="text-center mb-12 px-6">
+        <ScrollReveal className="text-center mb-4 md:mb-12 px-6">
           <SectionLabel text="Selected Reel" />
           <h2 className="font-grotesk font-bold text-[clamp(1.8rem,4vw,3rem)] text-[var(--text-primary)]">
             Watch the Work Speak

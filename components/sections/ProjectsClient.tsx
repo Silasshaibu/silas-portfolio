@@ -40,14 +40,14 @@ export default function ProjectsClient({ projects }: { projects: Project[] }) {
   return (
     <section id="projects" className="section-padding bg-[var(--bg-primary)]">
       <div className="max-w-7xl mx-auto">
-        <ScrollReveal className="mb-12">
+        <ScrollReveal className="mb-4 md:mb-12">
           <SectionLabel text="Work" />
           <h2 className="font-grotesk font-bold text-[clamp(1.8rem,4vw,3rem)] text-[var(--text-primary)]">
             Selected Projects
           </h2>
         </ScrollReveal>
 
-        <ScrollReveal delay={0.1} className="mb-10">
+        <ScrollReveal delay={0.1} className="mb-4 md:mb-10">
           <div
             ref={tabsRef}
             className="relative flex gap-2 overflow-x-auto lg:overflow-visible lg:gap-0 lg:inline-flex border border-[var(--glass-border)] rounded-xl p-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
