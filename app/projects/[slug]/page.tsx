@@ -49,8 +49,16 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
       <Navbar />
       <main className="bg-[var(--bg-primary)] pt-16 lg:h-screen lg:flex lg:flex-col lg:overflow-hidden">
 
-        {/* ── Prev/Next bar (full width, top) ── */}
-        <div className="flex-shrink-0 border-b border-[var(--border-subtle)] px-6 py-3">
+        {/* ── Top bar: Back + Prev/Next (full width) ── */}
+        <div className="flex-shrink-0 border-b border-[var(--border-subtle)] px-6 py-3 space-y-3">
+          <div className="max-w-7xl mx-auto">
+            <Link
+              href="/#projects"
+              className="inline-flex items-center gap-2 text-xs font-mono text-[var(--text-muted)] hover:text-[var(--accent-primary)] transition-colors"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" /> Back To Projects
+            </Link>
+          </div>
           <nav className="grid grid-cols-2 gap-3 max-w-7xl mx-auto">
             {prev ? (
               <Link
@@ -84,14 +92,8 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
           <aside data-lenis-prevent className="lg:w-[28%] lg:h-full lg:overflow-y-auto border-b lg:border-b-0 lg:border-r border-[var(--border-subtle)] order-2 lg:order-1">
             <div className="p-6 space-y-6">
 
-              {/* Back + category */}
+              {/* Category */}
               <div className="space-y-3">
-                <Link
-                  href="/#projects"
-                  className="inline-flex items-center gap-2 text-xs font-mono text-[var(--text-muted)] hover:text-[var(--accent-primary)] transition-colors"
-                >
-                  <ArrowLeft className="w-3.5 h-3.5" /> Back To Projects
-                </Link>
                 <div>
                   <span className={`text-xs font-mono px-2 py-1 rounded-full ${categoryColors[project.category]}`}>
                     {categoryLabels[project.category]}
