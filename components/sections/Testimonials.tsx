@@ -46,7 +46,7 @@ const testimonials: Testimonial[] = [
   { id: '37', quote: "très bon taff ! merci", name: 'paulgardette201', company: 'Character Modeling · France', platform: 'Fiverr', rating: 5 },
 ];
 
-const PER_PAGE = 3;
+const PER_PAGE = 2;
 
 const countryCodeMap: Record<string, string> = {
   'Switzerland': 'ch',
@@ -139,7 +139,7 @@ export default function Testimonials() {
             <ChevronLeft className="w-5 h-5" />
           </button>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 flex-1">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 flex-1">
             {visible.map((t, i) => (
               <ScrollReveal key={t.id} delay={i * 0.1}>
                 <div className="glass-card rounded-xl p-6 h-full flex flex-col">
