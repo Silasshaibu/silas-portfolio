@@ -58,7 +58,7 @@ export default function TestimonialsCarousel({ items }: { items: Testimonial[] }
 
   return (
     <section className="section-padding bg-[var(--bg-primary)]">
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="max-w-7xl mx-auto">
         <ScrollReveal className="text-center mb-14">
           <SectionLabel text="Social Proof" />
           <h2 className="font-grotesk font-bold text-[clamp(1.8rem,4vw,3rem)] text-[var(--text-primary)]">

@@ -67,7 +67,7 @@ export default function Contact() {
     <section id="contact" className="section-padding bg-[var(--bg-primary)] relative overflow-hidden">
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full bg-[var(--accent-primary)] opacity-[0.03] blur-[150px] pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
+      <div className="max-w-7xl mx-auto relative z-10">
         <ScrollReveal className="text-center mb-14">
           <SectionLabel text="Contact" />
           <h2 className="font-grotesk font-bold text-[clamp(2rem,5vw,3.5rem)] text-[var(--text-primary)] mb-4">

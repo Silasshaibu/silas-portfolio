@@ -29,7 +29,7 @@ export default function About({ headline, bio1, bio2, bio3, skills, pdfUrl, prof
 
   return (
     <section id="about" className="section-padding bg-[var(--bg-secondary)]">
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <ScrollReveal>
             <SectionLabel text="About" />
