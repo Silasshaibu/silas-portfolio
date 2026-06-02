@@ -8,8 +8,10 @@ export const projects: Project[] = [
     category: 'industrial',
     client: 'Manufacturing Client, Germany',
     tools: ['Blender', 'After Effects', 'DaVinci Resolve'],
-    thumbnail: '',
-    videoUrl: 'https://vimeo.com/placeholder1',
+    thumbnail: '/conveyor-render.jpeg',
+    videoUrl: '',
+    wireframeUrl: '/conveyor-wireframe.jpeg',
+    renderUrl: '/conveyor-render.jpeg',
     description: 'A 15-second looping animation showcasing a multi-stage conveyor belt system for a manufacturing facility, complete with moving parts, product flow, and mechanical details.',
     challenge: 'The client needed a clear, accurate visual of their conveyor system to use in sales presentations and training materials. Technical drawings were too complex for non-engineering stakeholders.',
     solution: 'Built the full conveyor system in Blender with accurate mechanical joints, belt movement, and product flow. Rendered with cinematic lighting in EEVEE for fast turnaround while maintaining quality.',
@@ -18,11 +20,8 @@ export const projects: Project[] = [
     // Add extra image/video sections here. Paste a URL into `url`.
     // Empty url shows a "coming soon" placeholder slot.
     gallery: [
-      { type: 'image', url: '', label: 'Still frame 1' },
-      { type: 'image', url: '', label: 'Still frame 2' },
-      { type: 'video', url: '', label: 'Detail breakdown video' },
-      // Comparison slider: paste two image URLs (url = left, urlB = right)
-      { type: 'compare', url: '', urlB: '', label: 'Wireframe vs Render', leftLabel: 'WIREFRAME', rightLabel: 'RENDER' },
+      { type: 'compare', url: '/conveyor-wireframe.jpeg', urlB: '/conveyor-render.jpeg', label: 'Wireframe vs Render', leftLabel: 'WIREFRAME', rightLabel: 'RENDER' },
+      { type: 'image', url: '/conveyor-render.jpeg', label: 'Final render' },
     ],
   },
   {
