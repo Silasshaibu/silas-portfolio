@@ -13,23 +13,23 @@ export default function ShowReel({ vimeoId, stats }: ShowReelProps) {
   const displayStats = (stats && stats.length > 0) ? stats : DEFAULT_STATS;
 
   return (
-    <section id="showreel" className="section-padding bg-[var(--bg-secondary)]">
-      <div className="max-w-6xl mx-auto px-6">
-        <ScrollReveal className="text-center mb-12">
+    <section id="showreel" className="py-24 lg:py-32 bg-[var(--bg-secondary)]">
+      <div className="max-w-6xl mx-auto">
+        <ScrollReveal className="text-center mb-12 px-6">
           <SectionLabel text="Selected Reel" />
           <h2 className="font-grotesk font-bold text-[clamp(1.8rem,4vw,3rem)] text-[var(--text-primary)]">
             Watch the Work Speak
           </h2>
         </ScrollReveal>
 
-        <ScrollReveal delay={0.1}>
+        <ScrollReveal delay={0.1} className="px-0 sm:px-6">
           <VideoEmbed
             vimeoId={vimeoId || undefined}
             title="Silas Shaibu — 3D Visualization Reel"
           />
         </ScrollReveal>
 
-        <ScrollReveal delay={0.2} className="mt-10">
+        <ScrollReveal delay={0.2} className="mt-10 px-6">
           <div className="flex flex-wrap items-center justify-center gap-4">
             {displayStats.map((stat) => (
               <span
