@@ -7,7 +7,6 @@ import VideoEmbed from '@/components/ui/VideoEmbed';
 import ComparisonSlider from '@/components/ui/ComparisonSlider';
 import Button from '@/components/ui/Button';
 import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
 
 export async function generateStaticParams() {
   return projects.map((p) => ({ slug: p.slug }));
@@ -46,7 +45,7 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen bg-[var(--bg-primary)] pt-16">
+      <main className="bg-[var(--bg-primary)] pt-16 lg:overflow-hidden">
 
         {/* Two-column layout — each panel scrolls independently */}
         <div className="flex flex-col lg:flex-row lg:h-[calc(100vh-4rem)]">
@@ -154,48 +153,50 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
                   <p className="text-sm text-[var(--text-muted)] font-mono">Visuals coming soon</p>
                 </div>
               )}
+
+              {/* Up Next nav */}
+              <nav className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
+                {prev ? (
+                  <Link
+                    href={`/projects/${prev.slug}`}
+                    className="glass-card rounded-xl p-5 hover:border-[rgba(0,212,255,0.2)] transition-all duration-200 group"
+                  >
+                    <p className="text-xs font-mono text-[var(--text-muted)] mb-1">← Previous</p>
+                    <p className="text-sm font-medium text-[var(--text-primary)] group-hover:text-[var(--accent-primary)] transition-colors">
+                      {prev.title}
+                    </p>
+                  </Link>
+                ) : <div />}
+                {next ? (
+                  <Link
+                    href={`/projects/${next.slug}`}
+                    className="glass-card rounded-xl p-5 hover:border-[rgba(0,212,255,0.2)] transition-all duration-200 group text-right"
+                  >
+                    <p className="text-xs font-mono text-[var(--text-muted)] mb-1">Next →</p>
+                    <p className="text-sm font-medium text-[var(--text-primary)] group-hover:text-[var(--accent-primary)] transition-colors">
+                      {next.title}
+                    </p>
+                  </Link>
+                ) : <div />}
+              </nav>
+
+              {/* CTA */}
+              <div className="text-center py-8 border-t border-[var(--border-subtle)]">
+                <h2 className="font-grotesk font-bold text-2xl text-[var(--text-primary)] mb-4">
+                  Like this work? Let&apos;s talk.
+                </h2>
+                <Button variant="primary" href="/#contact">Start a Project</Button>
+              </div>
+
+              {/* Minimal footer */}
+              <p className="text-center text-xs text-[var(--text-muted)] font-mono pb-2">
+                © {new Date().getFullYear()} Silas Shaibu. All rights reserved.
+              </p>
             </div>
           </div>
         </div>
 
-        {/* ── Full-width bottom: Prev/Next + CTA ── */}
-        <div className="border-t border-[var(--border-subtle)] px-6 py-12 max-w-7xl mx-auto space-y-10">
-
-          <nav className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {prev ? (
-              <Link
-                href={`/projects/${prev.slug}`}
-                className="glass-card rounded-xl p-5 hover:border-[rgba(0,212,255,0.2)] transition-all duration-200 group"
-              >
-                <p className="text-xs font-mono text-[var(--text-muted)] mb-1">← Previous</p>
-                <p className="text-sm font-medium text-[var(--text-primary)] group-hover:text-[var(--accent-primary)] transition-colors">
-                  {prev.title}
-                </p>
-              </Link>
-            ) : <div />}
-            {next ? (
-              <Link
-                href={`/projects/${next.slug}`}
-                className="glass-card rounded-xl p-5 hover:border-[rgba(0,212,255,0.2)] transition-all duration-200 group text-right"
-              >
-                <p className="text-xs font-mono text-[var(--text-muted)] mb-1">Next →</p>
-                <p className="text-sm font-medium text-[var(--text-primary)] group-hover:text-[var(--accent-primary)] transition-colors">
-                  {next.title}
-                </p>
-              </Link>
-            ) : <div />}
-          </nav>
-
-          <div className="text-center py-6">
-            <h2 className="font-grotesk font-bold text-2xl text-[var(--text-primary)] mb-4">
-              Like this work? Let&apos;s talk.
-            </h2>
-            <Button variant="primary" href="/#contact">Start a Project</Button>
-          </div>
-        </div>
-
       </main>
-      <Footer />
     </>
   );
 }
