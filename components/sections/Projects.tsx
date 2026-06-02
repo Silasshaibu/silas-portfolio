@@ -52,11 +52,11 @@ export default function Projects() {
         <ScrollReveal delay={0.1} className="mb-10">
           <div
             ref={tabsRef}
-            className="relative flex flex-wrap gap-2 md:gap-0 md:inline-flex border border-[var(--glass-border)] rounded-xl p-1"
+            className="relative flex flex-wrap gap-2 lg:gap-0 lg:inline-flex border border-[var(--glass-border)] rounded-xl p-1"
           >
             <span
               ref={indicatorRef}
-              className="hidden md:block absolute top-1 bottom-1 rounded-lg bg-[rgba(0,212,255,0.1)] border border-[rgba(0,212,255,0.2)] transition-none"
+              className="hidden lg:block absolute top-1 bottom-1 rounded-lg bg-[rgba(0,212,255,0.1)] border border-[rgba(0,212,255,0.2)] transition-none"
               style={{ left: 4, width: 48 }}
             />
             {tabs.map((tab) => (
