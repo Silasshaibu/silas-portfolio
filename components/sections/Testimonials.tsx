@@ -179,7 +179,7 @@ export default function Testimonials() {
             type="button"
             onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
             aria-label="Next"
-            className={`absolute right-5 top-1/2 -translate-y-1/2 p-2 rounded-full glass-card hover:text-[var(--accent-primary)] transition-colors z-10 ${page === totalPages - 1 ? 'invisible' : ''}`}
+            className={`absolute -right-5 top-1/2 -translate-y-1/2 p-2 rounded-full glass-card hover:text-[var(--accent-primary)] transition-colors z-10 ${page === totalPages - 1 ? 'invisible' : ''}`}
           >
             <ChevronRight className="w-5 h-5" />
           </button>
