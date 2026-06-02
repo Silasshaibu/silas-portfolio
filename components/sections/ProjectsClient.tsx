@@ -50,7 +50,7 @@ export default function ProjectsClient({ projects }: { projects: Project[] }) {
         <ScrollReveal delay={0.1} className="mb-10">
           <div
             ref={tabsRef}
-            className="relative flex flex-wrap gap-2 lg:gap-0 lg:inline-flex border border-[var(--glass-border)] rounded-xl p-1"
+            className="relative flex gap-2 overflow-x-auto lg:overflow-visible lg:gap-0 lg:inline-flex border border-[var(--glass-border)] rounded-xl p-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
             <span
               ref={indicatorRef}
@@ -62,7 +62,7 @@ export default function ProjectsClient({ projects }: { projects: Project[] }) {
                 type="button"
                 key={tab.value}
                 onClick={(e) => handleTabClick(tab.value, e.currentTarget)}
-                className={`relative z-10 px-4 py-2 text-sm rounded-lg transition-colors duration-200 whitespace-nowrap ${
+                className={`relative z-10 flex-shrink-0 px-4 py-2 text-sm rounded-lg transition-colors duration-200 whitespace-nowrap ${
                   active === tab.value
                     ? 'text-[var(--accent-primary)] font-medium'
                     : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
