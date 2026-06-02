@@ -31,7 +31,7 @@ export default function ComparisonSlider({
     const el = containerRef.current;
     if (!el) return;
     const { left, width } = el.getBoundingClientRect();
-    const pct = Math.min(95, Math.max(5, ((clientX - left) / width) * 100));
+    const pct = Math.min(100, Math.max(0, ((clientX - left) / width) * 100));
     setPos(pct);
   }, []);
 
