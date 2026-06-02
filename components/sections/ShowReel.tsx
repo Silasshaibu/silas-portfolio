@@ -26,6 +26,7 @@ export default function ShowReel({ vimeoId, stats }: ShowReelProps) {
           <VideoEmbed
             vimeoId={vimeoId || undefined}
             title="Silas Shaibu — 3D Visualization Reel"
+            rounded="rounded-none sm:rounded-2xl"
           />
         </ScrollReveal>
 

@@ -9,9 +9,10 @@ interface VideoEmbedProps {
   youtubeId?: string;
   thumbnailUrl?: string;
   title?: string;
+  rounded?: string;
 }
 
-export default function VideoEmbed({ vimeoId, youtubeId, thumbnailUrl, title }: VideoEmbedProps) {
+export default function VideoEmbed({ vimeoId, youtubeId, thumbnailUrl, title, rounded = 'rounded-2xl' }: VideoEmbedProps) {
   const [playing, setPlaying] = useState(false);
 
   const embedSrc = vimeoId
@@ -21,7 +22,7 @@ export default function VideoEmbed({ vimeoId, youtubeId, thumbnailUrl, title }: 
     : null;
 
   return (
-    <div className="relative w-full aspect-video rounded-2xl overflow-hidden bg-[var(--bg-card)] border border-[var(--glass-border)]">
+    <div className={`relative w-full aspect-video ${rounded} overflow-hidden bg-[var(--bg-card)] border border-[var(--glass-border)]`}>
       {playing && embedSrc ? (
         <iframe
           src={embedSrc}
