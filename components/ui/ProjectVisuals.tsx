@@ -14,10 +14,10 @@ interface Props {
   title: string;
 }
 
-function parseVideo(url: string): { vimeoId?: string; youtubeId?: string } {
+function parseVideo(url: string): { vimeoId?: string; youtubeId?: string; thumbnailUrl?: string } {
   if (/youtu\.?be/.test(url)) {
-    const m = url.match(/(?:v=|youtu\.be\/|embed\/|shorts\/)([\w-]{11})/);
-    return { youtubeId: m?.[1] ?? '' };
+    const id = url.match(/(?:v=|youtu\.be\/|embed\/|shorts\/)([\w-]{11})/)?.[1] ?? '';
+    return { youtubeId: id, thumbnailUrl: id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : undefined };
   }
   return { vimeoId: url.split('/').pop() ?? '' };
 }
