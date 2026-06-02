@@ -128,7 +128,7 @@ export default function Testimonials() {
         </ScrollReveal>
 
         {/* Cards + side arrows */}
-        <div className="relative mb-8 px-10">
+        <div className="relative mb-8">
           {/* Left arrow — absolute left, vertically centered */}
           <button
             type="button"
