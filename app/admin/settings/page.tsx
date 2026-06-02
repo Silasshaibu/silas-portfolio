@@ -56,6 +56,7 @@ export default function AdminSettingsPage() {
   const [aboutSkills, setAboutSkills] = useState<string[]>([]);
   const [newSkill, setNewSkill] = useState('');
   const [aboutPdfUrl, setAboutPdfUrl] = useState('');
+  const [profilePhoto, setProfilePhoto] = useState('');
 
   // Contact
   const [email, setEmail] = useState('');
@@ -77,6 +78,7 @@ export default function AdminSettingsPage() {
         setAboutBio3(data.about_bio_3 ?? '');
         try { setAboutSkills(JSON.parse(data.about_skills ?? '[]')); } catch { setAboutSkills([]); }
         setAboutPdfUrl(data.about_pdf_url ?? '');
+        setProfilePhoto(data.profile_photo ?? '');
         setEmail(data.email ?? '');
         try { setLinks(JSON.parse(data.contact_links ?? '[]')); } catch { setLinks([]); }
       });
@@ -113,6 +115,7 @@ export default function AdminSettingsPage() {
           about_bio_3: aboutBio3,
           about_skills: JSON.stringify(aboutSkills.filter(Boolean)),
           about_pdf_url: aboutPdfUrl,
+          profile_photo: profilePhoto,
           email,
           contact_links: JSON.stringify(links),
         }),
@@ -181,6 +184,48 @@ export default function AdminSettingsPage() {
 
         {/* About */}
         <Section title="About Section">
+          <Field label="Profile Photo">
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 rounded-full border-2 border-[var(--glass-border)] overflow-hidden flex items-center justify-center bg-[rgba(0,212,255,0.1)] flex-shrink-0">
+                {profilePhoto ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={profilePhoto} alt="Profile" className="w-full h-full object-cover object-top" />
+                ) : (
+                  <span className="font-grotesk font-bold text-lg text-[var(--accent-primary)]">SS</span>
+                )}
+              </div>
+              <div className="flex-1 space-y-2">
+                <input
+                  type="file"
+                  accept="image/*"
+                  id="profile-upload"
+                  className="hidden"
+                  onChange={e => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    const reader = new FileReader();
+                    reader.onload = ev => setProfilePhoto(ev.target?.result as string);
+                    reader.readAsDataURL(file);
+                  }}
+                />
+                <label
+                  htmlFor="profile-upload"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[rgba(0,212,255,0.1)] border border-[rgba(0,212,255,0.2)] text-[var(--accent-primary)] text-xs font-mono cursor-pointer hover:bg-[rgba(0,212,255,0.15)] transition-colors"
+                >
+                  Upload Photo
+                </label>
+                {profilePhoto && (
+                  <button
+                    type="button"
+                    onClick={() => setProfilePhoto('')}
+                    className="block text-xs text-red-400 hover:underline font-mono"
+                  >
+                    Remove photo
+                  </button>
+                )}
+              </div>
+            </div>
+          </Field>
           <Field label="Headline">
             <input value={aboutHeadline} onChange={e => setAboutHeadline(e.target.value)} className={input} placeholder="Engineering Thinking. Cinematic Vision." />
           </Field>

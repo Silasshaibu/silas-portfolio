@@ -12,9 +12,10 @@ interface AboutProps {
   bio3?: string;
   skills?: string[];
   pdfUrl?: string;
+  profilePhoto?: string;
 }
 
-export default function About({ headline, bio1, bio2, bio3, skills, pdfUrl }: AboutProps) {
+export default function About({ headline, bio1, bio2, bio3, skills, pdfUrl, profilePhoto }: AboutProps) {
   const displayHeadline = headline || 'Engineering Thinking. Cinematic Vision.';
   const displayBio1 = bio1 || "I'm Silas Shaibu — a 3D visualization artist who sits at the intersection of technical understanding and creative storytelling. I specialize in helping manufacturers, engineering firms, and product brands communicate complex ideas through high-end animation and CGI.";
   const displayBio2 = bio2 || "With deep expertise in Blender and an engineering-informed workflow, I bring industrial accuracy to every frame — whether it's a conveyor system animation, a product launch reveal, or a medical explainer.";
@@ -62,14 +63,14 @@ export default function About({ headline, bio1, bio2, bio3, skills, pdfUrl }: Ab
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-center">
                     <div className="w-24 h-24 rounded-full bg-[rgba(0,212,255,0.1)] border-2 border-[rgba(0,212,255,0.3)] mx-auto mb-4 overflow-hidden flex items-center justify-center relative">
+                      <span className="font-grotesk font-bold text-2xl text-[var(--accent-primary)] absolute select-none">SS</span>
                       <Image
-                        src="/profile.jpg"
+                        src={profilePhoto || '/profile.jpg'}
                         alt="Silas Shaibu"
                         fill
-                        className="object-cover object-top"
+                        className="object-cover object-top relative"
                         onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
                       />
-                      <span className="font-grotesk font-bold text-2xl text-[var(--accent-primary)] absolute">SS</span>
                     </div>
                     <p className="font-grotesk font-semibold text-[var(--text-primary)]">Silas Shaibu</p>
                     <p className="text-xs text-[var(--text-muted)] mt-1">3D Visualization Artist</p>

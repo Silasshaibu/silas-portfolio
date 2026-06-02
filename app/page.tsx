@@ -49,6 +49,7 @@ export default async function HomePage() {
           bio3={settings.about_bio_3}
           skills={aboutSkills}
           pdfUrl={settings.about_pdf_url}
+          profilePhoto={settings.profile_photo}
         />
         <GlowDivider />
         <Contact />

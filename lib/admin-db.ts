@@ -314,6 +314,7 @@ const SETTING_DEFAULTS: Record<string, string> = {
   about_bio_3: 'My background in dental studies adds a unique edge in medical visualization — an increasingly high-value niche in the 3D world.',
   about_skills: JSON.stringify(['Blender', 'After Effects', 'Product Visualization', 'Industrial Animation', 'Medical Animation', 'Motion Graphics']),
   about_pdf_url: '/api/portfolio-pdf',
+  profile_photo: '',
 };
 
 // Settings
