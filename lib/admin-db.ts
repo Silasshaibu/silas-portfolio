@@ -31,10 +31,14 @@ export async function seedAdminTables() {
       result TEXT NOT NULL DEFAULT '',
       featured BOOLEAN NOT NULL DEFAULT false,
       sort_order INTEGER NOT NULL DEFAULT 0,
+      wireframe_url TEXT NOT NULL DEFAULT '',
+      render_url TEXT NOT NULL DEFAULT '',
       created_at TIMESTAMPTZ DEFAULT NOW(),
       updated_at TIMESTAMPTZ DEFAULT NOW()
     )
   `;
+  await sql`ALTER TABLE projects ADD COLUMN IF NOT EXISTS wireframe_url TEXT NOT NULL DEFAULT ''`;
+  await sql`ALTER TABLE projects ADD COLUMN IF NOT EXISTS render_url TEXT NOT NULL DEFAULT ''`;
   await sql`
     CREATE TABLE IF NOT EXISTS services (
       id SERIAL PRIMARY KEY,
@@ -83,8 +87,8 @@ export async function dbGetProject(id: number) {
 export async function dbCreateProject(data: Record<string, unknown>) {
   const sql = getDb();
   const rows = await sql`
-    INSERT INTO projects (slug, title, category, client, tools, thumbnail, video_url, description, challenge, solution, result, featured, sort_order)
-    VALUES (${data.slug}, ${data.title}, ${data.category}, ${data.client}, ${data.tools}, ${data.thumbnail}, ${data.videoUrl}, ${data.description}, ${data.challenge}, ${data.solution}, ${data.result}, ${data.featured}, ${data.sortOrder})
+    INSERT INTO projects (slug, title, category, client, tools, thumbnail, video_url, description, challenge, solution, result, featured, sort_order, wireframe_url, render_url)
+    VALUES (${data.slug}, ${data.title}, ${data.category}, ${data.client}, ${data.tools}, ${data.thumbnail}, ${data.videoUrl}, ${data.description}, ${data.challenge}, ${data.solution}, ${data.result}, ${data.featured}, ${data.sortOrder}, ${data.wireframeUrl ?? ''}, ${data.renderUrl ?? ''})
     RETURNING *
   `;
   return rows[0];
@@ -97,6 +101,7 @@ export async function dbUpdateProject(id: number, data: Record<string, unknown>)
       tools=${data.tools}, thumbnail=${data.thumbnail}, video_url=${data.videoUrl},
       description=${data.description}, challenge=${data.challenge}, solution=${data.solution},
       result=${data.result}, featured=${data.featured}, sort_order=${data.sortOrder},
+      wireframe_url=${data.wireframeUrl ?? ''}, render_url=${data.renderUrl ?? ''},
       updated_at=NOW()
     WHERE id=${id} RETURNING *
   `;

@@ -37,6 +37,8 @@ export async function POST(request: NextRequest) {
       result: data.result ?? '',
       featured: data.featured ?? false,
       sortOrder: data.sortOrder ?? 0,
+      wireframeUrl: data.wireframeUrl ?? '',
+      renderUrl: data.renderUrl ?? '',
     });
     return NextResponse.json(project, { status: 201 });
   } catch (e) {

@@ -28,6 +28,8 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       result: data.result ?? '',
       featured: data.featured ?? false,
       sortOrder: data.sortOrder ?? 0,
+      wireframeUrl: data.wireframeUrl ?? '',
+      renderUrl: data.renderUrl ?? '',
     });
     return NextResponse.json(project);
   } catch (e) {

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { ArrowLeft, ArrowRight, ChevronRight } from 'lucide-react';
 import { projects, getProjectBySlug, getAdjacentProjects } from '@/lib/projects';
 import VideoEmbed from '@/components/ui/VideoEmbed';
+import ComparisonSlider from '@/components/ui/ComparisonSlider';
 import Button from '@/components/ui/Button';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
@@ -90,6 +91,17 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
           <section>
             <p className="text-[var(--text-secondary)] text-lg leading-relaxed">{project.description}</p>
           </section>
+
+          {/* Wireframe vs Render comparison slider */}
+          {(project.wireframeUrl || project.renderUrl) && (
+            <section>
+              <ComparisonSlider
+                wireframeUrl={project.wireframeUrl ?? ''}
+                renderUrl={project.renderUrl ?? ''}
+                title={project.title}
+              />
+            </section>
+          )}
 
           {/* Challenge & Solution */}
           <section className="grid grid-cols-1 md:grid-cols-2 gap-8">

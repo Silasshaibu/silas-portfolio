@@ -9,6 +9,8 @@ export interface Project {
   tools: string[];
   thumbnail: string;
   videoUrl?: string;
+  wireframeUrl?: string;
+  renderUrl?: string;
   description: string;
   challenge: string;
   solution: string;

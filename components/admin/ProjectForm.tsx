@@ -14,6 +14,8 @@ interface ProjectFormData {
   tools: string;
   thumbnail: string;
   videoUrl: string;
+  wireframeUrl: string;
+  renderUrl: string;
   description: string;
   challenge: string;
   solution: string;
@@ -108,6 +110,15 @@ export default function ProjectForm({ defaultValues, projectId }: Props) {
           </Field>
           <Field label="Video URL (Vimeo/YouTube)">
             <input {...register('videoUrl')} className={input} placeholder="https://vimeo.com/..." />
+          </Field>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <Field label="Wireframe Image URL">
+            <input {...register('wireframeUrl')} className={input} placeholder="https://... (wireframe screenshot)" />
+          </Field>
+          <Field label="Final Render Image URL">
+            <input {...register('renderUrl')} className={input} placeholder="https://... (final render screenshot)" />
           </Field>
         </div>
 
