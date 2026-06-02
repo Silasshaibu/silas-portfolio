@@ -46,8 +46,13 @@ export default function ProjectVisuals({ wireframeUrl, renderUrl, videoUrl, gall
         <VideoEmbed vimeoId={videoUrl.split('/').pop() ?? ''} title={title} />
       )}
 
-      {/* Extra gallery sections (images + videos) */}
+      {/* Extra gallery sections (images + videos + comparisons) */}
       {gallery?.map((item, i) => {
+        if (item.type === 'compare') {
+          return item.url && item.urlB
+            ? <ComparisonSlider key={i} wireframeUrl={item.url} renderUrl={item.urlB} title={item.label ?? title} heading={item.label} leftLabel={item.leftLabel} rightLabel={item.rightLabel} />
+            : <PlaceholderBox key={i} label={item.label ?? 'Comparison coming soon'} />;
+        }
         if (item.type === 'video') {
           return item.url
             ? <VideoEmbed key={i} vimeoId={item.url.split('/').pop() ?? ''} title={item.label ?? title} />

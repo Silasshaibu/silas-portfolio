@@ -1,9 +1,12 @@
 export type ProjectCategory = 'industrial' | 'product' | 'stylized' | 'medical';
 
 export interface GalleryItem {
-  type: 'image' | 'video';
-  url: string;
-  label?: string;
+  type: 'image' | 'video' | 'compare';
+  url: string;          // image src / video url / compare LEFT image
+  urlB?: string;        // compare RIGHT image
+  label?: string;       // heading (compare) or alt/label
+  leftLabel?: string;   // compare left badge
+  rightLabel?: string;  // compare right badge
 }
 
 export interface Project {

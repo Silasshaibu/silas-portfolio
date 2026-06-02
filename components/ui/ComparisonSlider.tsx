@@ -8,9 +8,19 @@ interface Props {
   wireframeUrl: string;
   renderUrl: string;
   title: string;
+  heading?: string;
+  leftLabel?: string;
+  rightLabel?: string;
 }
 
-export default function ComparisonSlider({ wireframeUrl, renderUrl, title }: Props) {
+export default function ComparisonSlider({
+  wireframeUrl,
+  renderUrl,
+  title,
+  heading = 'Wireframe vs Render',
+  leftLabel = 'WIREFRAME',
+  rightLabel = 'FINAL RENDER',
+}: Props) {
   if (!wireframeUrl || !renderUrl) return null;
 
   const [pos, setPos] = useState(50);
@@ -35,7 +45,7 @@ export default function ComparisonSlider({ wireframeUrl, renderUrl, title }: Pro
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <h2 className="font-grotesk font-bold text-xl text-[var(--text-primary)]">Wireframe vs Render</h2>
+        <h2 className="font-grotesk font-bold text-xl text-[var(--text-primary)]">{heading}</h2>
         <span className="text-xs font-mono text-[var(--text-muted)]">← Drag to compare →</span>
       </div>
 
@@ -51,7 +61,7 @@ export default function ComparisonSlider({ wireframeUrl, renderUrl, title }: Pro
         {/* Bottom layer — wireframe */}
         <div className="absolute inset-0 z-0">
           <Image src={wireframeUrl} alt={`${title} wireframe`} fill className="object-cover" />
-          <div className="absolute bottom-3 left-3 text-xs font-mono text-white/60 bg-black/40 px-2 py-1 rounded">WIREFRAME</div>
+          <div className="absolute bottom-3 left-3 text-xs font-mono text-white/60 bg-black/40 px-2 py-1 rounded">{leftLabel}</div>
         </div>
 
         {/* Top layer — final render, clipped from left */}
@@ -60,7 +70,7 @@ export default function ComparisonSlider({ wireframeUrl, renderUrl, title }: Pro
           style={{ clipPath: `inset(0 ${100 - pos}% 0 0)` }}
         >
           <Image src={renderUrl} alt={`${title} final render`} fill className="object-cover" />
-          <div className="absolute bottom-3 right-3 text-xs font-mono text-white/60 bg-black/40 px-2 py-1 rounded">FINAL RENDER</div>
+          <div className="absolute bottom-3 right-3 text-xs font-mono text-white/60 bg-black/40 px-2 py-1 rounded">{rightLabel}</div>
         </div>
 
         {/* Drag handle */}

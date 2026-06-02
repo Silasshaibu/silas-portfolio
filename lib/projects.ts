@@ -21,6 +21,8 @@ export const projects: Project[] = [
       { type: 'image', url: '', label: 'Still frame 1' },
       { type: 'image', url: '', label: 'Still frame 2' },
       { type: 'video', url: '', label: 'Detail breakdown video' },
+      // Comparison slider: paste two image URLs (url = left, urlB = right)
+      { type: 'compare', url: '', urlB: '', label: 'Wireframe vs Render', leftLabel: 'WIREFRAME', rightLabel: 'RENDER' },
     ],
   },
   {
