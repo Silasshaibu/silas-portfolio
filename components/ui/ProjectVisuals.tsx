@@ -44,17 +44,19 @@ export default function ProjectVisuals({ wireframeUrl, renderUrl, videoUrl, titl
   );
 
   return (
-    <div className="relative space-y-6">
+    <div className="space-y-6">
       {hasVisuals && (
-        <button
-          type="button"
-          onClick={() => setOpen(true)}
-          aria-label="Maximize visuals"
-          title="View fullscreen"
-          className="absolute top-3 right-3 z-30 p-2 rounded-lg glass-card text-[var(--text-secondary)] hover:text-[var(--accent-primary)] transition-colors"
-        >
-          <Maximize2 className="w-4 h-4" />
-        </button>
+        <div className="sticky top-0 z-30 flex justify-end">
+          <button
+            type="button"
+            onClick={() => setOpen(true)}
+            aria-label="Maximize visuals"
+            title="View fullscreen"
+            className="p-2 rounded-lg glass-card text-[var(--text-secondary)] hover:text-[var(--accent-primary)] transition-colors"
+          >
+            <Maximize2 className="w-4 h-4" />
+          </button>
+        </div>
       )}
 
       {visuals}
