@@ -30,6 +30,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       sortOrder: data.sortOrder ?? 0,
       wireframeUrl: data.wireframeUrl ?? '',
       renderUrl: data.renderUrl ?? '',
+      gallery: data.gallery ?? [],
     });
     return NextResponse.json(project);
   } catch (e) {

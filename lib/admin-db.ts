@@ -1,8 +1,34 @@
 import { neon, type NeonQueryFunction } from '@neondatabase/serverless';
+import type { Project, GalleryItem } from '@/types';
+import { projects as staticProjects } from '@/lib/projects';
 
 function getDb(): NeonQueryFunction<false, false> {
   if (!process.env.DATABASE_URL) throw new Error('DATABASE_URL not set');
   return neon(process.env.DATABASE_URL);
+}
+
+// Map a raw DB projects row (snake_case) to the public Project shape.
+export function mapDbProject(row: Record<string, unknown>): Project {
+  let gallery: GalleryItem[] = [];
+  try { gallery = JSON.parse((row.gallery as string) || '[]'); } catch { gallery = []; }
+  return {
+    id: String(row.id),
+    slug: String(row.slug),
+    title: String(row.title),
+    category: row.category as Project['category'],
+    client: String(row.client),
+    tools: Array.isArray(row.tools) ? (row.tools as string[]) : [],
+    thumbnail: String(row.thumbnail ?? ''),
+    videoUrl: String(row.video_url ?? ''),
+    wireframeUrl: String(row.wireframe_url ?? ''),
+    renderUrl: String(row.render_url ?? ''),
+    gallery,
+    description: String(row.description ?? ''),
+    challenge: String(row.challenge ?? ''),
+    solution: String(row.solution ?? ''),
+    result: String(row.result ?? ''),
+    featured: Boolean(row.featured),
+  };
 }
 
 export async function seedAdminTables() {
@@ -39,6 +65,7 @@ export async function seedAdminTables() {
   `;
   await sql`ALTER TABLE projects ADD COLUMN IF NOT EXISTS wireframe_url TEXT NOT NULL DEFAULT ''`;
   await sql`ALTER TABLE projects ADD COLUMN IF NOT EXISTS render_url TEXT NOT NULL DEFAULT ''`;
+  await sql`ALTER TABLE projects ADD COLUMN IF NOT EXISTS gallery TEXT NOT NULL DEFAULT '[]'`;
   await sql`
     CREATE TABLE IF NOT EXISTS services (
       id SERIAL PRIMARY KEY,
@@ -87,8 +114,8 @@ export async function dbGetProject(id: number) {
 export async function dbCreateProject(data: Record<string, unknown>) {
   const sql = getDb();
   const rows = await sql`
-    INSERT INTO projects (slug, title, category, client, tools, thumbnail, video_url, description, challenge, solution, result, featured, sort_order, wireframe_url, render_url)
-    VALUES (${data.slug}, ${data.title}, ${data.category}, ${data.client}, ${data.tools}, ${data.thumbnail}, ${data.videoUrl}, ${data.description}, ${data.challenge}, ${data.solution}, ${data.result}, ${data.featured}, ${data.sortOrder}, ${data.wireframeUrl ?? ''}, ${data.renderUrl ?? ''})
+    INSERT INTO projects (slug, title, category, client, tools, thumbnail, video_url, description, challenge, solution, result, featured, sort_order, wireframe_url, render_url, gallery)
+    VALUES (${data.slug}, ${data.title}, ${data.category}, ${data.client}, ${data.tools}, ${data.thumbnail}, ${data.videoUrl}, ${data.description}, ${data.challenge}, ${data.solution}, ${data.result}, ${data.featured}, ${data.sortOrder}, ${data.wireframeUrl ?? ''}, ${data.renderUrl ?? ''}, ${JSON.stringify(data.gallery ?? [])})
     RETURNING *
   `;
   return rows[0];
@@ -102,10 +129,35 @@ export async function dbUpdateProject(id: number, data: Record<string, unknown>)
       description=${data.description}, challenge=${data.challenge}, solution=${data.solution},
       result=${data.result}, featured=${data.featured}, sort_order=${data.sortOrder},
       wireframe_url=${data.wireframeUrl ?? ''}, render_url=${data.renderUrl ?? ''},
+      gallery=${JSON.stringify(data.gallery ?? [])},
       updated_at=NOW()
     WHERE id=${id} RETURNING *
   `;
   return rows[0];
+}
+export async function dbGetProjectBySlug(slug: string) {
+  const sql = getDb();
+  const rows = await sql`SELECT * FROM projects WHERE slug = ${slug}`;
+  return rows[0] ?? null;
+}
+// One-time backfill: push the current static lib/projects into the DB by slug,
+// so DB rows carry the latest thumbnails, wireframe/render URLs, gallery & captions.
+export async function dbUpsertStaticProjects() {
+  const sql = getDb();
+  let order = 1;
+  for (const p of staticProjects) {
+    await sql`
+      INSERT INTO projects (slug, title, category, client, tools, thumbnail, video_url, description, challenge, solution, result, featured, sort_order, wireframe_url, render_url, gallery)
+      VALUES (${p.slug}, ${p.title}, ${p.category}, ${p.client}, ${p.tools}, ${p.thumbnail ?? ''}, ${p.videoUrl ?? ''}, ${p.description}, ${p.challenge}, ${p.solution}, ${p.result}, ${p.featured}, ${order}, ${p.wireframeUrl ?? ''}, ${p.renderUrl ?? ''}, ${JSON.stringify(p.gallery ?? [])})
+      ON CONFLICT (slug) DO UPDATE SET
+        title=EXCLUDED.title, category=EXCLUDED.category, client=EXCLUDED.client, tools=EXCLUDED.tools,
+        thumbnail=EXCLUDED.thumbnail, video_url=EXCLUDED.video_url, description=EXCLUDED.description,
+        challenge=EXCLUDED.challenge, solution=EXCLUDED.solution, result=EXCLUDED.result,
+        featured=EXCLUDED.featured, wireframe_url=EXCLUDED.wireframe_url, render_url=EXCLUDED.render_url,
+        gallery=EXCLUDED.gallery, updated_at=NOW()
+    `;
+    order++;
+  }
 }
 export async function dbDeleteProject(id: number) {
   const sql = getDb();

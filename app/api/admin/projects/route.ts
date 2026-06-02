@@ -39,6 +39,7 @@ export async function POST(request: NextRequest) {
       sortOrder: data.sortOrder ?? 0,
       wireframeUrl: data.wireframeUrl ?? '',
       renderUrl: data.renderUrl ?? '',
+      gallery: data.gallery ?? [],
     });
     return NextResponse.json(project, { status: 201 });
   } catch (e) {

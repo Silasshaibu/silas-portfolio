@@ -2,24 +2,29 @@
 
 import { useEffect, useState } from 'react';
 import ProjectForm from '@/components/admin/ProjectForm';
+import type { GalleryItem } from '@/types';
 
 export default function EditProjectPage({ params }: { params: { id: string } }) {
   const [data, setData] = useState<Record<string, unknown> | null>(null);
+  const [gallery, setGallery] = useState<GalleryItem[]>([]);
 
   useEffect(() => {
     fetch(`/api/admin/projects/${params.id}`)
       .then((r) => r.json())
-      .then((p) => setData({
-        ...p,
-        tools: Array.isArray(p.tools) ? p.tools.join(', ') : p.tools,
-        videoUrl: p.video_url,
-        wireframeUrl: p.wireframe_url,
-        renderUrl: p.render_url,
-        sortOrder: p.sort_order,
-      }));
+      .then((p) => {
+        setData({
+          ...p,
+          tools: Array.isArray(p.tools) ? p.tools.join(', ') : p.tools,
+          videoUrl: p.video_url,
+          wireframeUrl: p.wireframe_url,
+          renderUrl: p.render_url,
+          sortOrder: p.sort_order,
+        });
+        try { setGallery(JSON.parse(p.gallery || '[]')); } catch { setGallery([]); }
+      });
   }, [params.id]);
 
   if (!data) return <div className="p-8 text-[var(--text-secondary)]">Loading...</div>;
 
-  return <ProjectForm defaultValues={data as never} projectId={Number(params.id)} />;
+  return <ProjectForm defaultValues={data as never} projectId={Number(params.id)} initialGallery={gallery} />;
 }

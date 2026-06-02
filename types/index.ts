@@ -8,6 +8,7 @@ export interface GalleryItem {
   caption?: string;     // short description shown under the media
   leftLabel?: string;   // compare left badge
   rightLabel?: string;  // compare right badge
+  draft?: boolean;      // hidden from the live site, kept in admin
 }
 
 export interface Project {

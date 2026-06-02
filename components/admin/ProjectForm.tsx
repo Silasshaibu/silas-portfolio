@@ -3,8 +3,9 @@
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { ArrowLeft, Save } from 'lucide-react';
+import { ArrowLeft, Save, Plus, Trash2 } from 'lucide-react';
 import Link from 'next/link';
+import type { GalleryItem } from '@/types';
 
 interface ProjectFormData {
   slug: string;
@@ -27,16 +28,23 @@ interface ProjectFormData {
 interface Props {
   defaultValues?: Partial<ProjectFormData>;
   projectId?: number;
+  initialGallery?: GalleryItem[];
 }
 
-export default function ProjectForm({ defaultValues, projectId }: Props) {
+export default function ProjectForm({ defaultValues, projectId, initialGallery }: Props) {
   const router = useRouter();
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const [gallery, setGallery] = useState<GalleryItem[]>(initialGallery ?? []);
 
   const { register, handleSubmit, formState: { errors } } = useForm<ProjectFormData>({
     defaultValues: defaultValues ?? { category: 'industrial', featured: false, sortOrder: 0 },
   });
+
+  const addItem = () => setGallery((g) => [...g, { type: 'image', url: '' }]);
+  const removeItem = (i: number) => setGallery((g) => g.filter((_, idx) => idx !== i));
+  const updateItem = (i: number, patch: Partial<GalleryItem>) =>
+    setGallery((g) => g.map((item, idx) => (idx === i ? { ...item, ...patch } : item)));
 
   const onSubmit = async (data: ProjectFormData) => {
     setSaving(true);
@@ -45,6 +53,7 @@ export default function ProjectForm({ defaultValues, projectId }: Props) {
       ...data,
       tools: data.tools.split(',').map((t) => t.trim()).filter(Boolean),
       sortOrder: Number(data.sortOrder),
+      gallery: gallery.filter((item) => item.url.trim() !== ''),
     };
     try {
       const res = await fetch(
@@ -148,6 +157,94 @@ export default function ProjectForm({ defaultValues, projectId }: Props) {
               <span className="text-sm text-[var(--text-secondary)]">Show as featured project</span>
             </label>
           </Field>
+        </div>
+
+        {/* Gallery media */}
+        <div className="pt-2">
+          <div className="flex items-center justify-between mb-3">
+            <div>
+              <h2 className="text-sm font-semibold text-white font-grotesk">Gallery Media</h2>
+              <p className="text-xs text-[var(--text-muted)] mt-0.5">Extra images, videos, and comparison sliders shown on the project page</p>
+            </div>
+            <button
+              type="button"
+              onClick={addItem}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[rgba(0,212,255,0.1)] border border-[rgba(0,212,255,0.2)] text-[var(--accent-primary)] text-xs font-mono hover:bg-[rgba(0,212,255,0.15)] transition-colors flex-shrink-0"
+            >
+              <Plus className="w-3.5 h-3.5" /> Add Media
+            </button>
+          </div>
+
+          {gallery.length === 0 && (
+            <p className="text-xs text-[var(--text-muted)] text-center py-6 border border-dashed border-[var(--glass-border)] rounded-lg">
+              No gallery media yet — click &quot;Add Media&quot; to add an image, video, or comparison.
+            </p>
+          )}
+
+          <div className="space-y-4">
+            {gallery.map((item, i) => (
+              <div key={i} className={`p-4 rounded-lg bg-[#0e0e0e] border border-[var(--glass-border)] space-y-3 ${item.draft ? 'opacity-60' : ''}`}>
+                <div className="flex items-center gap-2">
+                  <select
+                    value={item.type}
+                    onChange={(e) => updateItem(i, { type: e.target.value as GalleryItem['type'] })}
+                    className={input + ' max-w-[150px]'}
+                    aria-label="Media type"
+                  >
+                    <option value="image">Image</option>
+                    <option value="video">Video</option>
+                    <option value="compare">Comparison</option>
+                  </select>
+                  <label className="flex items-center gap-2 text-xs text-[var(--text-secondary)] cursor-pointer ml-auto">
+                    <input
+                      type="checkbox"
+                      checked={!!item.draft}
+                      onChange={(e) => updateItem(i, { draft: e.target.checked })}
+                      className="w-4 h-4 rounded accent-yellow-400"
+                    />
+                    <span className="font-mono">{item.draft ? 'Draft' : 'Live'}</span>
+                  </label>
+                  <button type="button" onClick={() => removeItem(i)} className="p-2 rounded-lg text-red-400 hover:bg-red-400/10 transition-colors" title="Remove media">
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+
+                <input
+                  value={item.url}
+                  onChange={(e) => updateItem(i, { url: e.target.value })}
+                  className={input}
+                  placeholder={item.type === 'video' ? 'Video URL (Vimeo/YouTube)' : item.type === 'compare' ? 'Left image URL' : 'Image URL'}
+                />
+                {item.type === 'compare' && (
+                  <input
+                    value={item.urlB ?? ''}
+                    onChange={(e) => updateItem(i, { urlB: e.target.value })}
+                    className={input}
+                    placeholder="Right image URL"
+                  />
+                )}
+                {item.type === 'compare' && (
+                  <div className="grid grid-cols-2 gap-3">
+                    <input value={item.leftLabel ?? ''} onChange={(e) => updateItem(i, { leftLabel: e.target.value })} className={input} placeholder="Left badge (e.g. WIREFRAME)" />
+                    <input value={item.rightLabel ?? ''} onChange={(e) => updateItem(i, { rightLabel: e.target.value })} className={input} placeholder="Right badge (e.g. RENDER)" />
+                  </div>
+                )}
+                <input
+                  value={item.label ?? ''}
+                  onChange={(e) => updateItem(i, { label: e.target.value })}
+                  className={input}
+                  placeholder={item.type === 'compare' ? 'Heading (e.g. Wireframe vs Render)' : 'Label (optional)'}
+                />
+                <textarea
+                  value={item.caption ?? ''}
+                  onChange={(e) => updateItem(i, { caption: e.target.value })}
+                  rows={2}
+                  className={input}
+                  placeholder="Short description shown under the media (optional)"
+                />
+              </div>
+            ))}
+          </div>
         </div>
 
         {error && <p className="text-xs text-red-400 bg-red-400/10 border border-red-400/20 rounded-lg px-3 py-2">{error}</p>}

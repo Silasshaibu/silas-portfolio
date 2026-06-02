@@ -3,16 +3,42 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { projects, getProjectBySlug, getAdjacentProjects } from '@/lib/projects';
+import { dbGetProjectBySlug, dbGetProjects, mapDbProject } from '@/lib/admin-db';
 import ProjectVisuals from '@/components/ui/ProjectVisuals';
 import Button from '@/components/ui/Button';
 import Navbar from '@/components/layout/Navbar';
+import type { Project } from '@/types';
+
+export const revalidate = 300;
+export const dynamicParams = true;
 
 export async function generateStaticParams() {
   return projects.map((p) => ({ slug: p.slug }));
 }
 
+// DB-first with static fallback.
+async function loadProject(slug: string): Promise<Project | null> {
+  try {
+    const row = await dbGetProjectBySlug(slug);
+    if (row) return mapDbProject(row as Record<string, unknown>);
+  } catch { /* fall back */ }
+  return getProjectBySlug(slug) ?? null;
+}
+
+async function loadAdjacent(slug: string): Promise<{ prev: Project | null; next: Project | null }> {
+  try {
+    const rows = await dbGetProjects();
+    if (rows.length > 0) {
+      const list = rows.map((r) => mapDbProject(r as Record<string, unknown>));
+      const i = list.findIndex((p) => p.slug === slug);
+      if (i !== -1) return { prev: i > 0 ? list[i - 1] : null, next: i < list.length - 1 ? list[i + 1] : null };
+    }
+  } catch { /* fall back */ }
+  return getAdjacentProjects(slug);
+}
+
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const project = getProjectBySlug(params.slug);
+  const project = await loadProject(params.slug);
   if (!project) return {};
   return {
     title: `${project.title} | Silas Shaibu`,
@@ -36,11 +62,13 @@ const categoryColors: Record<string, string> = {
   medical: 'bg-[rgba(34,197,94,0.15)] text-emerald-400',
 };
 
-export default function ProjectPage({ params }: { params: { slug: string } }) {
-  const project = getProjectBySlug(params.slug);
+export default async function ProjectPage({ params }: { params: { slug: string } }) {
+  const project = await loadProject(params.slug);
   if (!project) notFound();
 
-  const { prev, next } = getAdjacentProjects(params.slug);
+  const { prev, next } = await loadAdjacent(params.slug);
+  // Hide draft gallery items from the live site.
+  const publicGallery = (project.gallery ?? []).filter((item) => !item.draft);
 
   return (
     <>
@@ -183,7 +211,7 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
                 wireframeUrl={project.wireframeUrl}
                 renderUrl={project.renderUrl}
                 videoUrl={project.videoUrl}
-                gallery={project.gallery}
+                gallery={publicGallery}
                 title={project.title}
               />
 
