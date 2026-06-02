@@ -19,7 +19,7 @@ export default async function Services() {
     <section id="services" className="section-padding bg-[var(--bg-secondary)] relative overflow-hidden">
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 rounded-full bg-[var(--accent-primary)] opacity-[0.03] blur-[120px] pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
+      <div className="max-w-7xl mx-auto relative z-10">
         <ScrollReveal className="text-center mb-14">
           <SectionLabel text="What I Do" />
           <h2 className="font-grotesk font-bold text-[clamp(1.8rem,4vw,3rem)] text-[var(--text-primary)]">
