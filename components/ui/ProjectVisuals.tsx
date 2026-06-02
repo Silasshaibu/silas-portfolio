@@ -57,23 +57,31 @@ export default function ProjectVisuals({ wireframeUrl, renderUrl, videoUrl, gall
 
       {/* Extra gallery sections (images + videos + comparisons) */}
       {gallery?.map((item, i) => {
+        let media: React.ReactNode;
         if (item.type === 'compare') {
-          return item.url && item.urlB
-            ? <ComparisonSlider key={i} wireframeUrl={item.url} renderUrl={item.urlB} title={item.label ?? title} heading={item.label} leftLabel={item.leftLabel} rightLabel={item.rightLabel} />
-            : <PlaceholderBox key={i} label={item.label ?? 'Comparison coming soon'} />;
+          media = item.url && item.urlB
+            ? <ComparisonSlider wireframeUrl={item.url} renderUrl={item.urlB} title={item.label ?? title} heading={item.label} leftLabel={item.leftLabel} rightLabel={item.rightLabel} />
+            : <PlaceholderBox label={item.label ?? 'Comparison coming soon'} />;
+        } else if (item.type === 'video') {
+          media = item.url
+            ? <VideoEmbed {...parseVideo(item.url)} title={item.label ?? title} />
+            : <PlaceholderBox label={item.label ?? 'Video coming soon'} />;
+        } else {
+          media = item.url
+            ? (
+              <div className="relative w-full aspect-video rounded-xl overflow-hidden border border-[var(--glass-border)]">
+                <Image src={item.url} alt={item.label ?? title} fill sizes="(max-width: 1024px) 100vw, 72vw" className="object-cover" />
+              </div>
+            )
+            : <PlaceholderBox label={item.label ?? 'Image coming soon'} />;
         }
-        if (item.type === 'video') {
-          return item.url
-            ? <VideoEmbed key={i} {...parseVideo(item.url)} title={item.label ?? title} />
-            : <PlaceholderBox key={i} label={item.label ?? 'Video coming soon'} />;
-        }
-        return item.url
-          ? (
-            <div key={i} className="relative w-full aspect-video rounded-xl overflow-hidden border border-[var(--glass-border)]">
-              <Image src={item.url} alt={item.label ?? title} fill sizes="(max-width: 1024px) 100vw, 72vw" className="object-cover" />
-            </div>
-          )
-          : <PlaceholderBox key={i} label={item.label ?? 'Image coming soon'} />;
+        const desc = item.caption ?? item.label;
+        return (
+          <figure key={i} className="space-y-2">
+            {media}
+            {desc && <figcaption className="text-xs text-[var(--text-muted)] leading-relaxed">{desc}</figcaption>}
+          </figure>
+        );
       })}
 
       {!hasVisuals && <PlaceholderBox label="Visuals coming soon" />}

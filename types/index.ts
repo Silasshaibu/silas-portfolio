@@ -5,6 +5,7 @@ export interface GalleryItem {
   url: string;          // image src / video url / compare LEFT image
   urlB?: string;        // compare RIGHT image
   label?: string;       // heading (compare) or alt/label
+  caption?: string;     // short description shown under the media
   leftLabel?: string;   // compare left badge
   rightLabel?: string;  // compare right badge
 }
