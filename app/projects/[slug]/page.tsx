@@ -47,10 +47,38 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
   return (
     <>
       <Navbar />
-      <main className="bg-[var(--bg-primary)] pt-16 lg:overflow-hidden">
+      <main className="bg-[var(--bg-primary)] pt-16 lg:h-screen lg:flex lg:flex-col lg:overflow-hidden">
+
+        {/* ── Prev/Next bar (full width, top) ── */}
+        <div className="flex-shrink-0 border-b border-[var(--border-subtle)] px-6 py-3">
+          <nav className="grid grid-cols-2 gap-3 max-w-7xl mx-auto">
+            {prev ? (
+              <Link
+                href={`/projects/${prev.slug}`}
+                className="glass-card rounded-xl px-4 py-2.5 hover:border-[rgba(0,212,255,0.2)] transition-all duration-200 group"
+              >
+                <p className="text-[10px] font-mono text-[var(--text-muted)]">← Previous</p>
+                <p className="text-sm font-medium text-[var(--text-primary)] group-hover:text-[var(--accent-primary)] transition-colors truncate">
+                  {prev.title}
+                </p>
+              </Link>
+            ) : <div />}
+            {next ? (
+              <Link
+                href={`/projects/${next.slug}`}
+                className="glass-card rounded-xl px-4 py-2.5 hover:border-[rgba(0,212,255,0.2)] transition-all duration-200 group text-right"
+              >
+                <p className="text-[10px] font-mono text-[var(--text-muted)]">Next →</p>
+                <p className="text-sm font-medium text-[var(--text-primary)] group-hover:text-[var(--accent-primary)] transition-colors truncate">
+                  {next.title}
+                </p>
+              </Link>
+            ) : <div />}
+          </nav>
+        </div>
 
         {/* Two-column layout — each panel scrolls independently */}
-        <div className="flex flex-col lg:flex-row lg:h-[calc(100vh-4rem)]">
+        <div className="flex flex-col lg:flex-row lg:flex-1 lg:min-h-0">
 
           {/* ── Left sidebar: text & metadata ── */}
           <aside data-lenis-prevent className="lg:w-[28%] lg:h-full lg:overflow-y-auto border-b lg:border-b-0 lg:border-r border-[var(--border-subtle)] order-2 lg:order-1">
@@ -170,32 +198,6 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
                   <p className="text-sm text-[var(--text-muted)] font-mono">Visuals coming soon</p>
                 </div>
               )}
-
-              {/* Up Next nav */}
-              <nav className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
-                {prev ? (
-                  <Link
-                    href={`/projects/${prev.slug}`}
-                    className="glass-card rounded-xl p-5 hover:border-[rgba(0,212,255,0.2)] transition-all duration-200 group"
-                  >
-                    <p className="text-xs font-mono text-[var(--text-muted)] mb-1">← Previous</p>
-                    <p className="text-sm font-medium text-[var(--text-primary)] group-hover:text-[var(--accent-primary)] transition-colors">
-                      {prev.title}
-                    </p>
-                  </Link>
-                ) : <div />}
-                {next ? (
-                  <Link
-                    href={`/projects/${next.slug}`}
-                    className="glass-card rounded-xl p-5 hover:border-[rgba(0,212,255,0.2)] transition-all duration-200 group text-right"
-                  >
-                    <p className="text-xs font-mono text-[var(--text-muted)] mb-1">Next →</p>
-                    <p className="text-sm font-medium text-[var(--text-primary)] group-hover:text-[var(--accent-primary)] transition-colors">
-                      {next.title}
-                    </p>
-                  </Link>
-                ) : <div />}
-              </nav>
 
               {/* CTA */}
               <div className="text-center py-8 border-t border-[var(--border-subtle)]">
