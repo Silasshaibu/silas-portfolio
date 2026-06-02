@@ -39,7 +39,7 @@ export default function ProjectsClient({ projects }: { projects: Project[] }) {
 
   return (
     <section id="projects" className="section-padding bg-[var(--bg-primary)]">
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="max-w-7xl mx-auto">
         <ScrollReveal className="mb-12">
           <SectionLabel text="Work" />
           <h2 className="font-grotesk font-bold text-[clamp(1.8rem,4vw,3rem)] text-[var(--text-primary)]">
