@@ -46,9 +46,9 @@ export default function ComparisonSlider({
 
   return (
     <div className="space-y-3">
-      <div className="flex items-center justify-between">
+      <div className="relative flex items-center justify-between">
         <h2 className="font-grotesk font-bold text-xl text-[var(--text-primary)]">{heading}</h2>
-        <span className="text-xs font-mono text-[var(--text-muted)]">← Drag to compare →</span>
+        <span className="text-xs font-mono text-[var(--text-muted)] absolute right-1/2 translate-x-1/2">← Drag to compare →</span>
       </div>
 
       <div
