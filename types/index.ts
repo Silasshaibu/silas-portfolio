@@ -1,5 +1,11 @@
 export type ProjectCategory = 'industrial' | 'product' | 'stylized' | 'medical';
 
+export interface GalleryItem {
+  type: 'image' | 'video';
+  url: string;
+  label?: string;
+}
+
 export interface Project {
   id: string;
   slug: string;
@@ -11,6 +17,7 @@ export interface Project {
   videoUrl?: string;
   wireframeUrl?: string;
   renderUrl?: string;
+  gallery?: GalleryItem[];
   description: string;
   challenge: string;
   solution: string;

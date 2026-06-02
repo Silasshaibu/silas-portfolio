@@ -183,6 +183,7 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
                 wireframeUrl={project.wireframeUrl}
                 renderUrl={project.renderUrl}
                 videoUrl={project.videoUrl}
+                gallery={project.gallery}
                 title={project.title}
               />
 

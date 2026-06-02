@@ -4,17 +4,27 @@ import { useState, useEffect } from 'react';
 import { Maximize2, X } from 'lucide-react';
 import ComparisonSlider from '@/components/ui/ComparisonSlider';
 import VideoEmbed from '@/components/ui/VideoEmbed';
+import type { GalleryItem } from '@/types';
 
 interface Props {
   wireframeUrl?: string;
   renderUrl?: string;
   videoUrl?: string;
+  gallery?: GalleryItem[];
   title: string;
 }
 
-export default function ProjectVisuals({ wireframeUrl, renderUrl, videoUrl, title }: Props) {
+function PlaceholderBox({ label }: { label: string }) {
+  return (
+    <div className="flex items-center justify-center aspect-video rounded-xl border border-dashed border-[var(--glass-border)] bg-[var(--bg-card)]">
+      <p className="text-sm text-[var(--text-muted)] font-mono">{label}</p>
+    </div>
+  );
+}
+
+export default function ProjectVisuals({ wireframeUrl, renderUrl, videoUrl, gallery, title }: Props) {
   const [open, setOpen] = useState(false);
-  const hasVisuals = Boolean((wireframeUrl && renderUrl) || videoUrl);
+  const hasVisuals = Boolean((wireframeUrl && renderUrl) || videoUrl || (gallery && gallery.length > 0));
 
   useEffect(() => {
     if (!open) return;
@@ -35,11 +45,21 @@ export default function ProjectVisuals({ wireframeUrl, renderUrl, videoUrl, titl
       {videoUrl && (
         <VideoEmbed vimeoId={videoUrl.split('/').pop() ?? ''} title={title} />
       )}
-      {!hasVisuals && (
-        <div className="flex items-center justify-center aspect-video rounded-xl border border-dashed border-[var(--glass-border)] bg-[var(--bg-card)]">
-          <p className="text-sm text-[var(--text-muted)] font-mono">Visuals coming soon</p>
-        </div>
-      )}
+
+      {/* Extra gallery sections (images + videos) */}
+      {gallery?.map((item, i) => {
+        if (item.type === 'video') {
+          return item.url
+            ? <VideoEmbed key={i} vimeoId={item.url.split('/').pop() ?? ''} title={item.label ?? title} />
+            : <PlaceholderBox key={i} label={item.label ?? 'Video coming soon'} />;
+        }
+        return item.url
+          // eslint-disable-next-line @next/next/no-img-element
+          ? <img key={i} src={item.url} alt={item.label ?? title} className="w-full rounded-xl border border-[var(--glass-border)]" />
+          : <PlaceholderBox key={i} label={item.label ?? 'Image coming soon'} />;
+      })}
+
+      {!hasVisuals && <PlaceholderBox label="Visuals coming soon" />}
     </>
   );
 

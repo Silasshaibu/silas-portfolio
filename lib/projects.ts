@@ -15,6 +15,13 @@ export const projects: Project[] = [
     solution: 'Built the full conveyor system in Blender with accurate mechanical joints, belt movement, and product flow. Rendered with cinematic lighting in EEVEE for fast turnaround while maintaining quality.',
     result: 'The animation was used in 3 client pitches and reduced onboarding time for new operators by 40%. The client ordered two more machine animations within the same quarter.',
     featured: true,
+    // Add extra image/video sections here. Paste a URL into `url`.
+    // Empty url shows a "coming soon" placeholder slot.
+    gallery: [
+      { type: 'image', url: '', label: 'Still frame 1' },
+      { type: 'image', url: '', label: 'Still frame 2' },
+      { type: 'video', url: '', label: 'Detail breakdown video' },
+    ],
   },
   {
     id: '2',
