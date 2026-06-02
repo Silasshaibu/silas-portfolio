@@ -46,7 +46,7 @@ export default function ProjectVisuals({ wireframeUrl, renderUrl, videoUrl, titl
   return (
     <div className="space-y-6">
       {hasVisuals && (
-        <div className="sticky top-0 z-30 flex justify-end">
+        <div className="sticky top-3 z-30 flex justify-end pr-1 pt-1">
           <button
             type="button"
             onClick={() => setOpen(true)}
