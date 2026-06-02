@@ -27,9 +27,9 @@ export default async function Services() {
           </h2>
         </ScrollReveal>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:items-stretch">
           {(items as { id: string; icon: string; title: string; description: string }[]).map((service, i) => (
-            <ScrollReveal key={service.id} delay={i * 0.1}>
+            <ScrollReveal key={service.id} delay={i * 0.1} className="h-full">
               <ServiceCard service={service} />
             </ScrollReveal>
           ))}
