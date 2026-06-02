@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Star, ChevronDown, ChevronUp } from 'lucide-react';
 import SectionLabel from '@/components/ui/SectionLabel';
 import ScrollReveal from '@/components/animations/ScrollReveal';
@@ -51,6 +51,61 @@ function StarRating({ rating }: { rating: number }) {
   );
 }
 
+function ReviewCard({ t }: { t: Testimonial }) {
+  const [expanded, setExpanded] = useState(false);
+  const [clamped, setClamped] = useState(false);
+  const pRef = useRef<HTMLParagraphElement>(null);
+
+  useEffect(() => {
+    const el = pRef.current;
+    if (el) setClamped(el.scrollHeight > el.clientHeight + 1);
+  }, []);
+
+  const { service, country, flagCode } = parseCompany(t.company);
+
+  return (
+    <div className="glass-card rounded-xl p-6 mb-6 break-inside-avoid">
+      <StarRating rating={t.rating} />
+      <p
+        ref={pRef}
+        className={`text-sm text-[var(--text-secondary)] leading-relaxed ${expanded ? '' : 'line-clamp-4'}`}
+      >
+        &ldquo;{t.quote}&rdquo;
+      </p>
+      {clamped && (
+        <button
+          type="button"
+          onClick={() => setExpanded((v) => !v)}
+          className="text-xs font-mono text-[var(--accent-primary)] hover:underline mt-1.5"
+        >
+          {expanded ? 'Read less' : 'Read more'}
+        </button>
+      )}
+      <div className="flex items-center justify-between mt-6">
+        <div>
+          <div className="flex items-center gap-1.5">
+            <p className="text-sm font-medium text-[var(--text-primary)]">{t.name}</p>
+            {flagCode && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={`https://flagcdn.com/w20/${flagCode}.png`}
+                srcSet={`https://flagcdn.com/w40/${flagCode}.png 2x`}
+                alt={country}
+                loading="lazy"
+                className="rounded-sm object-cover flex-shrink-0 h-[13px] w-auto"
+              />
+            )}
+          </div>
+          <p className="text-xs text-[var(--text-muted)]">{service}{country ? ` · ${country}` : ''}</p>
+        </div>
+        <span className={`text-xs px-2 py-1 rounded-full font-mono ${platformColors[t.platform]}`}>
+          {t.platform}
+        </span>
+      </div>
+    </div>
+  );
+}
+
 export default function TestimonialsCarousel({ items }: { items: Testimonial[] }) {
   const [count, setCount] = useState(STEP);
   const visible = items.slice(0, count);
@@ -68,43 +123,11 @@ export default function TestimonialsCarousel({ items }: { items: Testimonial[] }
           <p className="text-sm text-[var(--text-muted)] mt-2">{items.length} verified Fiverr reviews</p>
         </ScrollReveal>
 
-        {/* Cards */}
-        <div className="mb-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {visible.map((t, i) => (
-              <ScrollReveal key={t.id} delay={(i % STEP) * 0.1}>
-                <div className="glass-card rounded-xl p-6 h-full flex flex-col">
-                  <StarRating rating={t.rating} />
-                  <p className="text-sm text-[var(--text-secondary)] leading-relaxed flex-1 mb-6">
-                    &ldquo;{t.quote}&rdquo;
-                  </p>
-                  {(() => { const { service, country, flagCode } = parseCompany(t.company); return (
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div className="flex items-center gap-1.5">
-                        <p className="text-sm font-medium text-[var(--text-primary)]">{t.name}</p>
-                        {flagCode && (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img
-                            src={`https://flagcdn.com/w20/${flagCode}.png`}
-                            srcSet={`https://flagcdn.com/w40/${flagCode}.png 2x`}
-                            alt={country}
-                            loading="lazy"
-                            className="rounded-sm object-cover flex-shrink-0 h-[13px] w-auto"
-                          />
-                        )}
-                      </div>
-                      <p className="text-xs text-[var(--text-muted)]">{service}{country ? ` · ${country}` : ''}</p>
-                    </div>
-                    <span className={`text-xs px-2 py-1 rounded-full font-mono ${platformColors[t.platform]}`}>
-                      {t.platform}
-                    </span>
-                  </div>
-                  ); })()}
-                </div>
-              </ScrollReveal>
-            ))}
-          </div>
+        {/* Cards — masonry on desktop via CSS columns */}
+        <div className="columns-1 md:columns-2 lg:columns-3 gap-6 mb-8">
+          {visible.map((t) => (
+            <ReviewCard key={t.id} t={t} />
+          ))}
         </div>
 
         {/* View more / less */}
