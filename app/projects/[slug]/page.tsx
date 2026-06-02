@@ -3,8 +3,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { projects, getProjectBySlug, getAdjacentProjects } from '@/lib/projects';
-import VideoEmbed from '@/components/ui/VideoEmbed';
-import ComparisonSlider from '@/components/ui/ComparisonSlider';
+import ProjectVisuals from '@/components/ui/ProjectVisuals';
 import Button from '@/components/ui/Button';
 import Navbar from '@/components/layout/Navbar';
 
@@ -42,7 +41,6 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
   if (!project) notFound();
 
   const { prev, next } = getAdjacentProjects(params.slug);
-  const hasVisuals = project.wireframeUrl || project.renderUrl || project.videoUrl;
 
   return (
     <>
@@ -180,26 +178,13 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
           <div data-lenis-prevent className="lg:w-[72%] lg:h-full lg:overflow-y-auto order-1 lg:order-2">
             <div className="p-6 space-y-6">
 
-              {/* Comparison slider */}
-              {(project.wireframeUrl && project.renderUrl) && (
-                <ComparisonSlider
-                  wireframeUrl={project.wireframeUrl}
-                  renderUrl={project.renderUrl}
-                  title={project.title}
-                />
-              )}
-
-              {/* Video */}
-              {project.videoUrl && (
-                <VideoEmbed vimeoId={project.videoUrl.split('/').pop() ?? ''} title={project.title} />
-              )}
-
-              {/* Placeholder if no visuals yet */}
-              {!hasVisuals && (
-                <div className="flex items-center justify-center aspect-video rounded-xl border border-dashed border-[var(--glass-border)] bg-[var(--bg-card)]">
-                  <p className="text-sm text-[var(--text-muted)] font-mono">Visuals coming soon</p>
-                </div>
-              )}
+              {/* Visuals (slider + video) with fullscreen lightbox */}
+              <ProjectVisuals
+                wireframeUrl={project.wireframeUrl}
+                renderUrl={project.renderUrl}
+                videoUrl={project.videoUrl}
+                title={project.title}
+              />
 
               {/* CTA */}
               <div className="text-center py-8 border-t border-[var(--border-subtle)]">
