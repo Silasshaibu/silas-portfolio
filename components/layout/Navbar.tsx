@@ -13,10 +13,10 @@ if (typeof window !== 'undefined') {
 }
 
 const navLinks = [
-  { label: 'Work', href: '#projects' },
-  { label: 'Services', href: '#services' },
-  { label: 'About', href: '#about' },
-  { label: 'Contact', href: '#contact' },
+  { label: 'Work', hash: '#projects' },
+  { label: 'Services', hash: '#services' },
+  { label: 'About', hash: '#about' },
+  { label: 'Contact', hash: '#contact' },
 ];
 
 export default function Navbar() {
@@ -24,6 +24,7 @@ export default function Navbar() {
   const navRef = useRef<HTMLElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+  const base = pathname === '/' ? '' : '/';
 
   useGSAP(
     () => {
@@ -87,7 +88,7 @@ export default function Navbar() {
             {navLinks.map((link) => (
               <Link
                 key={link.label}
-                href={link.href}
+                href={`${base}${link.hash}`}
                 className="text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors duration-200 relative group"
               >
                 {link.label}
@@ -95,7 +96,7 @@ export default function Navbar() {
               </Link>
             ))}
             <Link
-              href="#contact"
+              href={`${base}#contact`}
               className="px-4 py-2 text-sm font-medium border border-[var(--accent-primary)] text-[var(--accent-primary)] rounded-lg hover:bg-[rgba(0,212,255,0.08)] hover:shadow-[0_0_20px_rgba(0,212,255,0.2)] transition-all duration-300"
             >
               Hire Me
@@ -120,7 +121,7 @@ export default function Navbar() {
           {navLinks.map((link) => (
             <Link
               key={link.label}
-              href={link.href}
+              href={`${base}${link.hash}`}
               onClick={() => setMenuOpen(false)}
               className="mobile-link font-grotesk font-semibold text-3xl text-[var(--text-primary)] hover:text-[var(--accent-primary)] transition-colors duration-200"
             >
@@ -128,7 +129,7 @@ export default function Navbar() {
             </Link>
           ))}
           <Link
-            href="#contact"
+            href={`${base}#contact`}
             onClick={() => setMenuOpen(false)}
             className="mobile-link mt-4 px-8 py-3 border border-[var(--accent-primary)] text-[var(--accent-primary)] rounded-lg text-lg font-medium hover:bg-[rgba(0,212,255,0.08)] transition-all duration-300"
           >
