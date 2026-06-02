@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { ArrowLeft, ArrowRight, ChevronRight } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { projects, getProjectBySlug, getAdjacentProjects } from '@/lib/projects';
 import VideoEmbed from '@/components/ui/VideoEmbed';
 import ComparisonSlider from '@/components/ui/ComparisonSlider';
@@ -13,11 +13,7 @@ export async function generateStaticParams() {
   return projects.map((p) => ({ slug: p.slug }));
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { slug: string };
-}): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const project = getProjectBySlug(params.slug);
   if (!project) return {};
   return {
@@ -26,15 +22,6 @@ export async function generateMetadata({
   };
 }
 
-const processSteps = [
-  'Concept',
-  'Modeling',
-  'Texturing',
-  'Animation',
-  'Rendering',
-  'Delivery',
-];
-
 const categoryLabels: Record<string, string> = {
   industrial: 'Industrial & Engineering',
   product: 'Product Visualization',
@@ -42,11 +29,11 @@ const categoryLabels: Record<string, string> = {
   medical: 'Medical & Dental',
 };
 
-const placeholderGradients: Record<string, string> = {
-  industrial: 'linear-gradient(135deg, #0a1628 0%, #0d2137 50%, #091520 100%)',
-  product: 'linear-gradient(135deg, #120a28 0%, #1e1037 50%, #0a0915 100%)',
-  stylized: 'linear-gradient(135deg, #281a08 0%, #372510 50%, #150e04 100%)',
-  medical: 'linear-gradient(135deg, #0a2818 0%, #0d3720 50%, #091508 100%)',
+const categoryColors: Record<string, string> = {
+  industrial: 'bg-[rgba(0,212,255,0.15)] text-[var(--accent-primary)]',
+  product: 'bg-[rgba(123,47,247,0.15)] text-[#a78bfa]',
+  stylized: 'bg-[rgba(255,165,0,0.15)] text-orange-400',
+  medical: 'bg-[rgba(34,197,94,0.15)] text-emerald-400',
 };
 
 export default function ProjectPage({ params }: { params: { slug: string } }) {
@@ -54,127 +41,126 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
   if (!project) notFound();
 
   const { prev, next } = getAdjacentProjects(params.slug);
+  const hasVisuals = project.wireframeUrl || project.renderUrl || project.videoUrl;
 
   return (
     <>
       <Navbar />
       <main className="min-h-screen bg-[var(--bg-primary)] pt-16">
-        {/* Hero */}
-        <div
-          className="relative h-[60vh] flex items-end overflow-hidden"
-          style={{
-            background: project.thumbnail
-              ? `url(${project.thumbnail}) center/cover no-repeat`
-              : placeholderGradients[project.category],
-          }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-t from-[#080808] via-[#080808]/50 to-transparent" />
-          <div className="relative z-10 max-w-5xl mx-auto px-6 pb-12 w-full">
-            <Link
-              href="/#projects"
-              className="inline-flex items-center gap-2 text-sm text-[var(--text-secondary)] hover:text-[var(--accent-primary)] transition-colors mb-6"
-            >
-              <ArrowLeft className="w-4 h-4" /> Back to Projects
-            </Link>
-            <span className="inline-block px-3 py-1 text-xs font-mono rounded-full bg-[rgba(0,212,255,0.15)] text-[var(--accent-primary)] mb-3">
-              {categoryLabels[project.category]}
-            </span>
-            <h1 className="font-grotesk font-bold text-[clamp(1.8rem,4vw,3rem)] text-white">
-              {project.title}
-            </h1>
-            <p className="text-[var(--text-secondary)] mt-2">{project.client}</p>
+
+        {/* Two-column layout */}
+        <div className="flex flex-col lg:flex-row min-h-[calc(100vh-4rem)]">
+
+          {/* ── Left sidebar: text & metadata ── */}
+          <aside className="lg:w-[28%] lg:sticky lg:top-16 lg:h-[calc(100vh-4rem)] lg:overflow-y-auto border-b lg:border-b-0 lg:border-r border-[var(--border-subtle)] order-2 lg:order-1">
+            <div className="p-6 space-y-6">
+
+              {/* Back + category */}
+              <div className="space-y-3">
+                <Link
+                  href="/#projects"
+                  className="inline-flex items-center gap-2 text-xs font-mono text-[var(--text-muted)] hover:text-[var(--accent-primary)] transition-colors"
+                >
+                  <ArrowLeft className="w-3.5 h-3.5" /> Back To Projects
+                </Link>
+                <div>
+                  <span className={`text-xs font-mono px-2 py-1 rounded-full ${categoryColors[project.category]}`}>
+                    {categoryLabels[project.category]}
+                  </span>
+                </div>
+                <h1 className="font-grotesk font-bold text-xl text-[var(--text-primary)] leading-tight">
+                  {project.title}
+                </h1>
+                <p className="text-xs text-[var(--text-muted)] font-mono">{project.client}</p>
+              </div>
+
+              {/* Description */}
+              <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
+                {project.description}
+              </p>
+
+              <div className="border-t border-[var(--border-subtle)]" />
+
+              {/* Challenge */}
+              {project.challenge && (
+                <div className="border border-dashed border-[var(--glass-border)] rounded-xl p-4 space-y-2">
+                  <h2 className="text-xs font-mono text-[var(--accent-primary)] tracking-widest uppercase">
+                    The Challenge
+                  </h2>
+                  <p className="text-sm text-[var(--text-secondary)] leading-relaxed">{project.challenge}</p>
+                </div>
+              )}
+
+              {/* Solution */}
+              {project.solution && (
+                <div className="border border-dashed border-[var(--glass-border)] rounded-xl p-4 space-y-2">
+                  <h2 className="text-xs font-mono text-[var(--accent-primary)] tracking-widest uppercase">
+                    The Solution
+                  </h2>
+                  <p className="text-sm text-[var(--text-secondary)] leading-relaxed">{project.solution}</p>
+                </div>
+              )}
+
+              {/* Result */}
+              {project.result && (
+                <div className="border border-dashed border-[var(--glass-border)] rounded-xl p-4 space-y-2">
+                  <h2 className="text-xs font-mono text-[var(--accent-primary)] tracking-widest uppercase">
+                    The Result
+                  </h2>
+                  <p className="text-sm text-[var(--text-secondary)] leading-relaxed">{project.result}</p>
+                </div>
+              )}
+
+              {/* Tools */}
+              {project.tools.length > 0 && (
+                <div className="space-y-2">
+                  <h2 className="text-xs font-mono text-[var(--text-muted)] tracking-widest uppercase">Tools</h2>
+                  <div className="flex flex-wrap gap-2">
+                    {project.tools.map((tool) => (
+                      <span
+                        key={tool}
+                        className="px-2.5 py-1 text-xs font-mono rounded-lg border border-[var(--glass-border)] bg-[var(--glass-bg)] text-[var(--text-secondary)]"
+                      >
+                        {tool}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </aside>
+
+          {/* ── Right panel: visuals ── */}
+          <div className="lg:w-[72%] order-1 lg:order-2">
+            <div className="p-6 space-y-6">
+
+              {/* Comparison slider */}
+              {(project.wireframeUrl && project.renderUrl) && (
+                <ComparisonSlider
+                  wireframeUrl={project.wireframeUrl}
+                  renderUrl={project.renderUrl}
+                  title={project.title}
+                />
+              )}
+
+              {/* Video */}
+              {project.videoUrl && (
+                <VideoEmbed vimeoId={project.videoUrl.split('/').pop() ?? ''} title={project.title} />
+              )}
+
+              {/* Placeholder if no visuals yet */}
+              {!hasVisuals && (
+                <div className="flex items-center justify-center aspect-video rounded-xl border border-dashed border-[var(--glass-border)] bg-[var(--bg-card)]">
+                  <p className="text-sm text-[var(--text-muted)] font-mono">Visuals coming soon</p>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
-        <div className="max-w-5xl mx-auto px-6 py-16 space-y-16">
-          {/* Description */}
-          <section>
-            <p className="text-[var(--text-secondary)] text-lg leading-relaxed">{project.description}</p>
-          </section>
+        {/* ── Full-width bottom: Prev/Next + CTA ── */}
+        <div className="border-t border-[var(--border-subtle)] px-6 py-12 max-w-7xl mx-auto space-y-10">
 
-          {/* Wireframe vs Render comparison slider */}
-          {(project.wireframeUrl || project.renderUrl) && (
-            <section>
-              <ComparisonSlider
-                wireframeUrl={project.wireframeUrl ?? ''}
-                renderUrl={project.renderUrl ?? ''}
-                title={project.title}
-              />
-            </section>
-          )}
-
-          {/* Challenge & Solution */}
-          <section className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="glass-card rounded-xl p-6">
-              <h2 className="font-grotesk font-semibold text-[var(--accent-primary)] text-sm font-mono tracking-widest uppercase mb-4">
-                The Challenge
-              </h2>
-              <p className="text-[var(--text-secondary)] leading-relaxed">{project.challenge}</p>
-            </div>
-            <div className="glass-card rounded-xl p-6">
-              <h2 className="font-grotesk font-semibold text-[var(--accent-primary)] text-sm font-mono tracking-widest uppercase mb-4">
-                The Solution
-              </h2>
-              <p className="text-[var(--text-secondary)] leading-relaxed">{project.solution}</p>
-            </div>
-          </section>
-
-          {/* Process timeline */}
-          <section>
-            <h2 className="font-grotesk font-bold text-xl text-[var(--text-primary)] mb-8">Process</h2>
-            <div className="flex flex-wrap md:flex-nowrap items-center gap-2">
-              {processSteps.map((step, i) => (
-                <div key={step} className="flex items-center gap-2">
-                  <div className="flex flex-col items-center">
-                    <div className="w-8 h-8 rounded-full border border-[rgba(0,212,255,0.4)] bg-[rgba(0,212,255,0.08)] flex items-center justify-center">
-                      <span className="text-xs font-mono text-[var(--accent-primary)]">{i + 1}</span>
-                    </div>
-                    <span className="text-xs text-[var(--text-muted)] mt-1 whitespace-nowrap">{step}</span>
-                  </div>
-                  {i < processSteps.length - 1 && (
-                    <ChevronRight className="w-4 h-4 text-[var(--text-muted)] mb-4 flex-shrink-0" />
-                  )}
-                </div>
-              ))}
-            </div>
-          </section>
-
-          {/* Video */}
-          {project.videoUrl && (
-            <section>
-              <h2 className="font-grotesk font-bold text-xl text-[var(--text-primary)] mb-6">
-                Project Video
-              </h2>
-              <VideoEmbed vimeoId="placeholder" title={project.title} />
-            </section>
-          )}
-
-          {/* Tools */}
-          <section>
-            <h2 className="font-grotesk font-bold text-xl text-[var(--text-primary)] mb-6">
-              Tools Used
-            </h2>
-            <div className="flex flex-wrap gap-3">
-              {project.tools.map((tool) => (
-                <span
-                  key={tool}
-                  className="px-4 py-2 text-sm font-mono rounded-lg border border-[var(--glass-border)] bg-[var(--glass-bg)] text-[var(--text-secondary)]"
-                >
-                  {tool}
-                </span>
-              ))}
-            </div>
-          </section>
-
-          {/* Result */}
-          <section className="glass-card rounded-xl p-8">
-            <h2 className="font-grotesk font-semibold text-[var(--accent-primary)] text-sm font-mono tracking-widest uppercase mb-4">
-              The Result
-            </h2>
-            <p className="text-[var(--text-secondary)] leading-relaxed text-lg">{project.result}</p>
-          </section>
-
-          {/* Prev / Next navigation */}
           <nav className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {prev ? (
               <Link
@@ -186,9 +172,7 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
                   {prev.title}
                 </p>
               </Link>
-            ) : (
-              <div />
-            )}
+            ) : <div />}
             {next ? (
               <Link
                 href={`/projects/${next.slug}`}
@@ -199,21 +183,17 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
                   {next.title}
                 </p>
               </Link>
-            ) : (
-              <div />
-            )}
+            ) : <div />}
           </nav>
 
-          {/* Bottom CTA */}
-          <section className="text-center py-8">
+          <div className="text-center py-6">
             <h2 className="font-grotesk font-bold text-2xl text-[var(--text-primary)] mb-4">
               Like this work? Let&apos;s talk.
             </h2>
-            <Button variant="primary" href="/#contact">
-              Start a Project
-            </Button>
-          </section>
+            <Button variant="primary" href="/#contact">Start a Project</Button>
+          </div>
         </div>
+
       </main>
       <Footer />
     </>
