@@ -9,7 +9,7 @@ export const projects: Project[] = [
     client: 'Manufacturing Client, Germany',
     tools: ['Blender', 'After Effects', 'DaVinci Resolve'],
     thumbnail: '/conveyor-render.jpeg',
-    videoUrl: '',
+    videoUrl: 'https://www.youtube.com/watch?v=kM-hUSXABWI',
     wireframeUrl: '/conveyor-wireframe.jpeg',
     renderUrl: '/conveyor-render.jpeg',
     description: 'A 15-second looping animation showcasing a multi-stage conveyor belt system for a manufacturing facility, complete with moving parts, product flow, and mechanical details.',

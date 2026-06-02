@@ -14,6 +14,14 @@ interface Props {
   title: string;
 }
 
+function parseVideo(url: string): { vimeoId?: string; youtubeId?: string } {
+  if (/youtu\.?be/.test(url)) {
+    const m = url.match(/(?:v=|youtu\.be\/|embed\/|shorts\/)([\w-]{11})/);
+    return { youtubeId: m?.[1] ?? '' };
+  }
+  return { vimeoId: url.split('/').pop() ?? '' };
+}
+
 function PlaceholderBox({ label }: { label: string }) {
   return (
     <div className="flex items-center justify-center aspect-video rounded-xl border border-dashed border-[var(--glass-border)] bg-[var(--bg-card)]">
@@ -43,7 +51,7 @@ export default function ProjectVisuals({ wireframeUrl, renderUrl, videoUrl, gall
         <ComparisonSlider wireframeUrl={wireframeUrl} renderUrl={renderUrl} title={title} />
       )}
       {videoUrl && (
-        <VideoEmbed vimeoId={videoUrl.split('/').pop() ?? ''} title={title} />
+        <VideoEmbed {...parseVideo(videoUrl)} title={title} />
       )}
 
       {/* Extra gallery sections (images + videos + comparisons) */}
@@ -55,7 +63,7 @@ export default function ProjectVisuals({ wireframeUrl, renderUrl, videoUrl, gall
         }
         if (item.type === 'video') {
           return item.url
-            ? <VideoEmbed key={i} vimeoId={item.url.split('/').pop() ?? ''} title={item.label ?? title} />
+            ? <VideoEmbed key={i} {...parseVideo(item.url)} title={item.label ?? title} />
             : <PlaceholderBox key={i} label={item.label ?? 'Video coming soon'} />;
         }
         return item.url
