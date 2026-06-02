@@ -49,40 +49,40 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
       <Navbar />
       <main className="bg-[var(--bg-primary)] pt-16 lg:h-screen lg:flex lg:flex-col lg:overflow-hidden">
 
-        {/* ── Top bar: Back + Prev/Next (full width) ── */}
-        <div className="flex-shrink-0 border-b border-[var(--border-subtle)] px-6 py-3 space-y-3">
-          <div className="max-w-7xl mx-auto">
+        {/* ── Top bar: Back (left) + Prev/Next (right) ── */}
+        <div className="flex-shrink-0 border-b border-[var(--border-subtle)] px-6 py-3">
+          <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
             <Link
               href="/#projects"
-              className="inline-flex items-center gap-2 text-xs font-mono text-[var(--text-muted)] hover:text-[var(--accent-primary)] transition-colors"
+              className="inline-flex items-center gap-2 text-xs font-mono text-[var(--text-muted)] hover:text-[var(--accent-primary)] transition-colors flex-shrink-0"
             >
               <ArrowLeft className="w-3.5 h-3.5" /> Back To Projects
             </Link>
+            <nav className="flex gap-3">
+              {prev ? (
+                <Link
+                  href={`/projects/${prev.slug}`}
+                  className="glass-card rounded-xl px-4 py-2 w-44 sm:w-52 hover:border-[rgba(0,212,255,0.2)] transition-all duration-200 group"
+                >
+                  <p className="text-[10px] font-mono text-[var(--text-muted)]">← Previous</p>
+                  <p className="text-sm font-medium text-[var(--text-primary)] group-hover:text-[var(--accent-primary)] transition-colors truncate">
+                    {prev.title}
+                  </p>
+                </Link>
+              ) : <div />}
+              {next ? (
+                <Link
+                  href={`/projects/${next.slug}`}
+                  className="glass-card rounded-xl px-4 py-2 w-44 sm:w-52 hover:border-[rgba(0,212,255,0.2)] transition-all duration-200 group text-right"
+                >
+                  <p className="text-[10px] font-mono text-[var(--text-muted)]">Next →</p>
+                  <p className="text-sm font-medium text-[var(--text-primary)] group-hover:text-[var(--accent-primary)] transition-colors truncate">
+                    {next.title}
+                  </p>
+                </Link>
+              ) : <div />}
+            </nav>
           </div>
-          <nav className="grid grid-cols-2 gap-3 max-w-7xl mx-auto">
-            {prev ? (
-              <Link
-                href={`/projects/${prev.slug}`}
-                className="glass-card rounded-xl px-4 py-2.5 hover:border-[rgba(0,212,255,0.2)] transition-all duration-200 group"
-              >
-                <p className="text-[10px] font-mono text-[var(--text-muted)]">← Previous</p>
-                <p className="text-sm font-medium text-[var(--text-primary)] group-hover:text-[var(--accent-primary)] transition-colors truncate">
-                  {prev.title}
-                </p>
-              </Link>
-            ) : <div />}
-            {next ? (
-              <Link
-                href={`/projects/${next.slug}`}
-                className="glass-card rounded-xl px-4 py-2.5 hover:border-[rgba(0,212,255,0.2)] transition-all duration-200 group text-right"
-              >
-                <p className="text-[10px] font-mono text-[var(--text-muted)]">Next →</p>
-                <p className="text-sm font-medium text-[var(--text-primary)] group-hover:text-[var(--accent-primary)] transition-colors truncate">
-                  {next.title}
-                </p>
-              </Link>
-            ) : <div />}
-          </nav>
         </div>
 
         {/* Two-column layout — each panel scrolls independently */}
