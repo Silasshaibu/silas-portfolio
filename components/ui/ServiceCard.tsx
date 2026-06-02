@@ -25,7 +25,7 @@ export default function ServiceCard({ service }: ServiceCardProps) {
       <h3 className="font-grotesk font-semibold text-base text-[var(--text-primary)] mb-3 flex-shrink-0">
         {service.title}
       </h3>
-      <p className="text-sm text-[var(--text-secondary)] leading-relaxed line-clamp-3 overflow-hidden">
+      <p className="text-sm text-[var(--text-secondary)] leading-relaxed line-clamp-4 overflow-hidden">
         {service.description}
       </p>
     </div>
