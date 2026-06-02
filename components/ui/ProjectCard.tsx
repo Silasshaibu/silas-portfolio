@@ -35,6 +35,7 @@ interface ProjectCardProps {
 export default function ProjectCard({ project }: ProjectCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
+  const staticTitleRef = useRef<HTMLDivElement>(null);
 
   useGSAP(
     () => {
@@ -45,10 +46,12 @@ export default function ProjectCard({ project }: ProjectCardProps) {
       const onEnter = () => {
         gsap.to(overlay, { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' });
         gsap.to(card, { scale: 1.03, duration: 0.3, ease: 'power2.out' });
+        gsap.to(staticTitleRef.current, { opacity: 0, duration: 0.2 });
       };
       const onLeave = () => {
         gsap.to(overlay, { opacity: 0, y: 10, duration: 0.2 });
         gsap.to(card, { scale: 1, duration: 0.3, ease: 'power2.out' });
+        gsap.to(staticTitleRef.current, { opacity: 1, duration: 0.2 });
       };
 
       card.addEventListener('mouseenter', onEnter);
@@ -101,7 +104,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
         </Link>
       </div>
 
-      <div className="absolute bottom-4 left-4">
+      <div ref={staticTitleRef} className="absolute bottom-4 left-4">
         <h3 className="font-grotesk font-semibold text-sm text-white/80">{project.title}</h3>
       </div>
     </div>
