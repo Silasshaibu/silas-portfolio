@@ -1,12 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Star, ChevronDown, ChevronUp } from 'lucide-react';
 import SectionLabel from '@/components/ui/SectionLabel';
 import ScrollReveal from '@/components/animations/ScrollReveal';
 import type { Testimonial } from '@/types';
 
-const PER_PAGE = 3;
+const STEP = 3;
 
 const countryCodeMap: Record<string, string> = {
   'Switzerland': 'ch',
@@ -52,9 +52,10 @@ function StarRating({ rating }: { rating: number }) {
 }
 
 export default function TestimonialsCarousel({ items }: { items: Testimonial[] }) {
-  const [page, setPage] = useState(0);
-  const totalPages = Math.ceil(items.length / PER_PAGE);
-  const visible = items.slice(page * PER_PAGE, page * PER_PAGE + PER_PAGE);
+  const [count, setCount] = useState(STEP);
+  const visible = items.slice(0, count);
+  const canShowMore = count < items.length;
+  const canShowLess = count > STEP;
 
   return (
     <section className="section-padding bg-[var(--bg-primary)]">
@@ -67,20 +68,11 @@ export default function TestimonialsCarousel({ items }: { items: Testimonial[] }
           <p className="text-sm text-[var(--text-muted)] mt-2">{items.length} verified Fiverr reviews</p>
         </ScrollReveal>
 
-        {/* Cards + side arrows */}
-        <div className="relative mb-8">
-          <button
-            type="button"
-            onClick={() => setPage((p) => Math.max(0, p - 1))}
-            aria-label="Previous"
-            className={`absolute -left-5 top-1/2 -translate-y-1/2 p-2 rounded-full glass-card hover:text-[var(--accent-primary)] transition-colors z-10 ${page === 0 ? 'invisible' : ''}`}
-          >
-            <ChevronLeft className="w-5 h-5" />
-          </button>
-
+        {/* Cards */}
+        <div className="mb-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {visible.map((t, i) => (
-              <ScrollReveal key={t.id} delay={i * 0.1}>
+              <ScrollReveal key={t.id} delay={(i % STEP) * 0.1}>
                 <div className="glass-card rounded-xl p-6 h-full flex flex-col">
                   <StarRating rating={t.rating} />
                   <p className="text-sm text-[var(--text-secondary)] leading-relaxed flex-1 mb-6">
@@ -113,33 +105,31 @@ export default function TestimonialsCarousel({ items }: { items: Testimonial[] }
               </ScrollReveal>
             ))}
           </div>
-
-          <button
-            type="button"
-            onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
-            aria-label="Next"
-            className={`absolute -right-5 top-1/2 -translate-y-1/2 p-2 rounded-full glass-card hover:text-[var(--accent-primary)] transition-colors z-10 ${page === totalPages - 1 ? 'invisible' : ''}`}
-          >
-            <ChevronRight className="w-5 h-5" />
-          </button>
         </div>
 
-        {/* 3 dots — active pill grows/shrinks with CSS transition */}
-        <div className="flex items-center justify-center gap-2 mb-14">
-          {[0, 1, 2].map((dot) => {
-            const activeDot =
-              page === 0 ? 0 :
-              page === totalPages - 1 ? 2 :
-              1;
-            const isActive = dot === activeDot;
-            return (
-              <span
-                key={dot}
-                className={`h-2 rounded-full transition-all duration-300 ease-in-out ${isActive ? 'w-5 bg-[var(--accent-primary)]' : 'w-2 bg-[var(--text-muted)]'}`}
-              />
-            );
-          })}
-        </div>
+        {/* View more / less */}
+        {(canShowMore || canShowLess) && (
+          <div className="flex items-center justify-center gap-3 mb-14">
+            {canShowMore && (
+              <button
+                type="button"
+                onClick={() => setCount((c) => Math.min(items.length, c + STEP))}
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full glass-card text-sm text-[var(--text-primary)] hover:text-[var(--accent-primary)] hover:border-[rgba(0,212,255,0.3)] transition-colors"
+              >
+                View More <ChevronDown className="w-4 h-4" />
+              </button>
+            )}
+            {canShowLess && (
+              <button
+                type="button"
+                onClick={() => setCount(STEP)}
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full glass-card text-sm text-[var(--text-secondary)] hover:text-[var(--accent-primary)] hover:border-[rgba(0,212,255,0.3)] transition-colors"
+              >
+                View Less <ChevronUp className="w-4 h-4" />
+              </button>
+            )}
+          </div>
+        )}
 
         <ScrollReveal delay={0.3}>
           <div className="glass-card rounded-xl p-6 text-center">
