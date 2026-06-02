@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { Maximize2, X } from 'lucide-react';
 import ComparisonSlider from '@/components/ui/ComparisonSlider';
 import VideoEmbed from '@/components/ui/VideoEmbed';
@@ -48,7 +49,7 @@ export default function ProjectVisuals({ wireframeUrl, renderUrl, videoUrl, gall
   const visuals = (
     <>
       {wireframeUrl && renderUrl && (
-        <ComparisonSlider wireframeUrl={wireframeUrl} renderUrl={renderUrl} title={title} />
+        <ComparisonSlider wireframeUrl={wireframeUrl} renderUrl={renderUrl} title={title} priority />
       )}
       {videoUrl && (
         <VideoEmbed {...parseVideo(videoUrl)} title={title} />
@@ -67,8 +68,11 @@ export default function ProjectVisuals({ wireframeUrl, renderUrl, videoUrl, gall
             : <PlaceholderBox key={i} label={item.label ?? 'Video coming soon'} />;
         }
         return item.url
-          // eslint-disable-next-line @next/next/no-img-element
-          ? <img key={i} src={item.url} alt={item.label ?? title} className="w-full rounded-xl border border-[var(--glass-border)]" />
+          ? (
+            <div key={i} className="relative w-full aspect-video rounded-xl overflow-hidden border border-[var(--glass-border)]">
+              <Image src={item.url} alt={item.label ?? title} fill sizes="(max-width: 1024px) 100vw, 72vw" className="object-cover" />
+            </div>
+          )
           : <PlaceholderBox key={i} label={item.label ?? 'Image coming soon'} />;
       })}
 

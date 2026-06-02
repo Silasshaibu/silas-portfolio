@@ -5,6 +5,7 @@ const nextConfig = {
       { protocol: 'https', hostname: 'i.vimeocdn.com' },
       { protocol: 'https', hostname: 'vimeo.com' },
       { protocol: 'https', hostname: 'flagcdn.com' },
+      { protocol: 'https', hostname: 'img.youtube.com' },
     ],
     formats: ['image/avif', 'image/webp'],
   },

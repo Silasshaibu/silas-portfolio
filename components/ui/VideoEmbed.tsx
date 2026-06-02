@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { Play } from 'lucide-react';
 
 interface VideoEmbedProps {
@@ -32,15 +33,17 @@ export default function VideoEmbed({ vimeoId, youtubeId, thumbnailUrl, title }: 
       ) : (
         <>
           {thumbnailUrl && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
+            <Image
               src={thumbnailUrl}
               alt={title ?? 'Video thumbnail'}
-              className="absolute inset-0 w-full h-full object-cover"
+              fill
+              sizes="(max-width: 1024px) 100vw, 72vw"
+              className="object-cover"
             />
           )}
           <div className="absolute inset-0 bg-black/40" />
           <button
+            type="button"
             onClick={() => setPlaying(true)}
             className="absolute inset-0 flex items-center justify-center group"
             aria-label="Play video"

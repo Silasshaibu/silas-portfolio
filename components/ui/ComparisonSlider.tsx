@@ -11,6 +11,7 @@ interface Props {
   heading?: string;
   leftLabel?: string;
   rightLabel?: string;
+  priority?: boolean;
 }
 
 export default function ComparisonSlider({
@@ -20,6 +21,7 @@ export default function ComparisonSlider({
   heading = 'Wireframe vs Render',
   leftLabel = 'WIREFRAME',
   rightLabel = 'FINAL RENDER',
+  priority = false,
 }: Props) {
   if (!wireframeUrl || !renderUrl) return null;
 
@@ -60,7 +62,7 @@ export default function ComparisonSlider({
       >
         {/* Bottom layer — wireframe */}
         <div className="absolute inset-0 z-0">
-          <Image src={wireframeUrl} alt={`${title} wireframe`} fill className="object-cover" />
+          <Image src={wireframeUrl} alt={`${title} wireframe`} fill priority={priority} sizes="(max-width: 1024px) 100vw, 72vw" className="object-cover" />
           <div className="absolute bottom-3 left-3 text-xs font-mono text-white/60 bg-black/40 px-2 py-1 rounded">{leftLabel}</div>
         </div>
 
@@ -69,7 +71,7 @@ export default function ComparisonSlider({
           className="absolute inset-0 z-10"
           style={{ clipPath: `inset(0 ${100 - pos}% 0 0)` }}
         >
-          <Image src={renderUrl} alt={`${title} final render`} fill className="object-cover" />
+          <Image src={renderUrl} alt={`${title} final render`} fill priority={priority} sizes="(max-width: 1024px) 100vw, 72vw" className="object-cover" />
           <div className="absolute bottom-3 right-3 text-xs font-mono text-white/60 bg-black/40 px-2 py-1 rounded">{rightLabel}</div>
         </div>
 

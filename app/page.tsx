@@ -11,6 +11,10 @@ import GlowDivider from '@/components/ui/GlowDivider';
 import CursorGlow from '@/components/ui/CursorGlow';
 import { dbGetSettings } from '@/lib/admin-db';
 
+// ISR: cache the page for 5 minutes so admin edits still appear, but
+// most requests skip the DB round-trip (lower TTFB).
+export const revalidate = 300;
+
 export default async function HomePage() {
   let settings: Record<string, string> = {};
   try { settings = await dbGetSettings() as Record<string, string>; } catch { /* use defaults */ }

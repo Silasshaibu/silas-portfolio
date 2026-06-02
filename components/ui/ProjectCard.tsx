@@ -2,6 +2,7 @@
 
 import { useRef } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useGSAP } from '@gsap/react';
 import { gsap } from 'gsap';
 import { ArrowRight } from 'lucide-react';
@@ -72,14 +73,17 @@ export default function ProjectCard({ project }: ProjectCardProps) {
       className="relative rounded-xl overflow-hidden cursor-pointer aspect-[4/3] block"
       style={{ willChange: 'transform' }}
     >
-      <div
-        className="absolute inset-0"
-        style={{
-          background: project.thumbnail
-            ? `url(${project.thumbnail}) center/cover no-repeat`
-            : placeholderGradients[project.category],
-        }}
-      />
+      {project.thumbnail ? (
+        <Image
+          src={project.thumbnail}
+          alt={project.title}
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          className="object-cover"
+        />
+      ) : (
+        <div className="absolute inset-0" style={{ background: placeholderGradients[project.category] }} />
+      )}
 
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
