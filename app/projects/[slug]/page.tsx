@@ -21,6 +21,8 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
+const processSteps = ['Concept', 'Modeling', 'Texturing', 'Animation', 'Rendering', 'Delivery'];
+
 const categoryLabels: Record<string, string> = {
   industrial: 'Industrial & Engineering',
   product: 'Product Visualization',
@@ -126,6 +128,21 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
                   </div>
                 </div>
               )}
+
+              {/* Process */}
+              <div className="space-y-3">
+                <h2 className="text-xs font-mono text-[var(--text-muted)] tracking-widest uppercase">Process</h2>
+                <ol className="space-y-3">
+                  {processSteps.map((step, i) => (
+                    <li key={step} className="flex items-center gap-3">
+                      <span className="w-6 h-6 flex-shrink-0 rounded-full border border-[rgba(0,212,255,0.4)] bg-[rgba(0,212,255,0.08)] flex items-center justify-center text-xs font-mono text-[var(--accent-primary)]">
+                        {i + 1}
+                      </span>
+                      <span className="text-sm text-[var(--text-secondary)]">{step}</span>
+                    </li>
+                  ))}
+                </ol>
+              </div>
             </div>
           </aside>
 
