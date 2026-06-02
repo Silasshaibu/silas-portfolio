@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import SectionLabel from '@/components/ui/SectionLabel';
 import Button from '@/components/ui/Button';
 import ScrollReveal from '@/components/animations/ScrollReveal';
@@ -60,8 +61,15 @@ export default function About({ headline, bio1, bio2, bio3, skills, pdfUrl }: Ab
               <div className="w-72 h-80 rounded-2xl bg-[var(--bg-card)] border border-[var(--glass-border)] overflow-hidden relative">
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-center">
-                    <div className="w-24 h-24 rounded-full bg-[rgba(0,212,255,0.1)] border-2 border-[rgba(0,212,255,0.3)] mx-auto mb-4 flex items-center justify-center">
-                      <span className="font-grotesk font-bold text-2xl text-[var(--accent-primary)]">SS</span>
+                    <div className="w-24 h-24 rounded-full bg-[rgba(0,212,255,0.1)] border-2 border-[rgba(0,212,255,0.3)] mx-auto mb-4 overflow-hidden flex items-center justify-center relative">
+                      <Image
+                        src="/profile.jpg"
+                        alt="Silas Shaibu"
+                        fill
+                        className="object-cover object-top"
+                        onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
+                      />
+                      <span className="font-grotesk font-bold text-2xl text-[var(--accent-primary)] absolute">SS</span>
                     </div>
                     <p className="font-grotesk font-semibold text-[var(--text-primary)]">Silas Shaibu</p>
                     <p className="text-xs text-[var(--text-muted)] mt-1">3D Visualization Artist</p>
