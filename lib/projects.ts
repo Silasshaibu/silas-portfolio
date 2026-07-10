@@ -133,7 +133,7 @@ export const projects: Project[] = [
   {
     id: '7',
     slug: 'ino-usa-corrugated-board-belt-explainer',
-    title: 'INO USA – Corrugated Board Process | Belt Product',
+    title: 'Corrugated Board Process | Belt Product',
     category: 'industrial',
     client: 'INO USA',
     tools: ['Blender', 'After Effects', 'DaVinci Resolve'],
