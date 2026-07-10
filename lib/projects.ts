@@ -50,7 +50,7 @@ export const projects: Project[] = [
     client: 'Logistics Company, Netherlands',
     tools: ['Blender', 'Cycles Render', 'After Effects'],
     thumbnail: '/sorting-render.jpeg',
-    videoUrl: '',
+    videoUrl: 'https://youtu.be/ZZLV_taB4bg',
     gallery: [{ type: 'image', url: '/sorting-render.jpeg', label: 'Exploded-view render', caption: 'Exploded-view render of the parcel sorting system — conveyors, scanning gate, and diverters separated to show the flow.' }],
     description: 'A full machine breakdown animation of an industrial sorting system, showing each stage of the sorting process with exploded-view sequences and component callouts.',
     challenge: 'A logistics company needed to explain their proprietary sorting technology to investors and potential clients without revealing competitive engineering details.',
