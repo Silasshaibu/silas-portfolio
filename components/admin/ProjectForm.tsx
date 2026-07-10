@@ -29,9 +29,6 @@ interface ProjectFormData {
   client: string;
   tools: string;
   thumbnail: string;
-  videoUrl: string;
-  wireframeUrl: string;
-  renderUrl: string;
   description: string;
   challenge: string;
   solution: string;
@@ -150,23 +147,9 @@ export default function ProjectForm({ defaultValues, projectId, initialGallery }
           <input {...register('tools')} className={input} placeholder="Blender, After Effects, DaVinci Resolve" />
         </Field>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-          <Field label="Thumbnail URL">
-            <input {...register('thumbnail')} className={input} placeholder="https://..." />
-          </Field>
-          <Field label="Video URL (Vimeo/YouTube)">
-            <input {...register('videoUrl')} className={input} placeholder="https://vimeo.com/..." />
-          </Field>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-          <Field label="Wireframe Image URL">
-            <input {...register('wireframeUrl')} className={input} placeholder="https://... (wireframe screenshot)" />
-          </Field>
-          <Field label="Final Render Image URL">
-            <input {...register('renderUrl')} className={input} placeholder="https://... (final render screenshot)" />
-          </Field>
-        </div>
+        <Field label="Thumbnail URL">
+          <input {...register('thumbnail')} className={input} placeholder="https://..." />
+        </Field>
 
         <Field label="Description *" error={errors.description?.message}>
           <textarea {...register('description', { required: 'Required' })} rows={3} className={input} placeholder="Short description of the project..." />
@@ -201,7 +184,7 @@ export default function ProjectForm({ defaultValues, projectId, initialGallery }
           <div className="flex items-center justify-between mb-3">
             <div>
               <h2 className="text-sm font-semibold text-white font-grotesk">Gallery Media</h2>
-              <p className="text-xs text-[var(--text-muted)] mt-0.5">Drag to reorder how they appear on the project page. Extra images, videos, and comparison sliders.</p>
+              <p className="text-xs text-[var(--text-muted)] mt-0.5">All images, videos, and comparison sliders shown on the project page. Drag to reorder.</p>
             </div>
             <button
               type="button"

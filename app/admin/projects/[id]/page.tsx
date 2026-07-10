@@ -15,9 +15,6 @@ export default function EditProjectPage({ params }: { params: { id: string } }) 
         setData({
           ...p,
           tools: Array.isArray(p.tools) ? p.tools.join(', ') : p.tools,
-          videoUrl: p.video_url,
-          wireframeUrl: p.wireframe_url,
-          renderUrl: p.render_url,
           sortOrder: p.sort_order,
         });
         try { setGallery(JSON.parse(p.gallery || '[]')); } catch { setGallery([]); }

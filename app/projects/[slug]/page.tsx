@@ -208,9 +208,6 @@ export default async function ProjectPage({ params }: { params: { slug: string }
 
               {/* Visuals (slider + video) with fullscreen lightbox */}
               <ProjectVisuals
-                wireframeUrl={project.wireframeUrl}
-                renderUrl={project.renderUrl}
-                videoUrl={project.videoUrl}
                 gallery={publicGallery}
                 title={project.title}
               />

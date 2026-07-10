@@ -9,9 +9,6 @@ import { parseVideo } from '@/lib/parseVideo';
 import type { GalleryItem } from '@/types';
 
 interface Props {
-  wireframeUrl?: string;
-  renderUrl?: string;
-  videoUrl?: string;
   gallery?: GalleryItem[];
   title: string;
 }
@@ -24,9 +21,9 @@ function PlaceholderBox({ label }: { label: string }) {
   );
 }
 
-export default function ProjectVisuals({ wireframeUrl, renderUrl, videoUrl, gallery, title }: Props) {
+export default function ProjectVisuals({ gallery, title }: Props) {
   const [open, setOpen] = useState(false);
-  const hasVisuals = Boolean((wireframeUrl && renderUrl) || videoUrl || (gallery && gallery.length > 0));
+  const hasVisuals = Boolean(gallery && gallery.length > 0);
 
   useEffect(() => {
     if (!open) return;
@@ -41,19 +38,11 @@ export default function ProjectVisuals({ wireframeUrl, renderUrl, videoUrl, gall
 
   const visuals = (
     <>
-      {wireframeUrl && renderUrl && (
-        <ComparisonSlider wireframeUrl={wireframeUrl} renderUrl={renderUrl} title={title} priority />
-      )}
-      {videoUrl && (
-        <VideoEmbed {...parseVideo(videoUrl)} title={title} />
-      )}
-
-      {/* Extra gallery sections (images + videos + comparisons) */}
       {gallery?.map((item, i) => {
         let media: React.ReactNode;
         if (item.type === 'compare') {
           media = item.url && item.urlB
-            ? <ComparisonSlider wireframeUrl={item.url} renderUrl={item.urlB} title={item.label ?? title} heading={item.label} leftLabel={item.leftLabel} rightLabel={item.rightLabel} />
+            ? <ComparisonSlider wireframeUrl={item.url} renderUrl={item.urlB} title={item.label ?? title} heading={item.label} leftLabel={item.leftLabel} rightLabel={item.rightLabel} priority={i === 0} />
             : <PlaceholderBox label={item.label ?? 'Comparison coming soon'} />;
         } else if (item.type === 'video') {
           media = item.url
@@ -63,7 +52,7 @@ export default function ProjectVisuals({ wireframeUrl, renderUrl, videoUrl, gall
           media = item.url
             ? (
               <div className="relative w-full aspect-video rounded-xl overflow-hidden border border-[var(--glass-border)]">
-                <Image src={item.url} alt={item.label ?? title} fill sizes="(max-width: 1024px) 100vw, 72vw" className="object-cover" />
+                <Image src={item.url} alt={item.label ?? title} fill priority={i === 0} sizes="(max-width: 1024px) 100vw, 72vw" className="object-cover" />
               </div>
             )
             : <PlaceholderBox label={item.label ?? 'Image coming soon'} />;
