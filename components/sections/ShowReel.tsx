@@ -1,16 +1,18 @@
 import SectionLabel from '@/components/ui/SectionLabel';
 import VideoEmbed from '@/components/ui/VideoEmbed';
 import ScrollReveal from '@/components/animations/ScrollReveal';
+import { parseVideo } from '@/lib/parseVideo';
 
 const DEFAULT_STATS = ['30+ Industrial Projects', 'Product Visualization', 'CGI & Motion'];
 
 interface ShowReelProps {
-  vimeoId?: string;
+  videoUrl?: string;
   stats?: string[];
 }
 
-export default function ShowReel({ vimeoId, stats }: ShowReelProps) {
+export default function ShowReel({ videoUrl, stats }: ShowReelProps) {
   const displayStats = (stats && stats.length > 0) ? stats : DEFAULT_STATS;
+  const video = videoUrl ? parseVideo(videoUrl) : {};
 
   return (
     <section id="showreel" className="py-24 lg:py-32 bg-[var(--bg-secondary)]">
@@ -24,7 +26,9 @@ export default function ShowReel({ vimeoId, stats }: ShowReelProps) {
 
         <ScrollReveal delay={0.1} className="px-0 sm:px-6">
           <VideoEmbed
-            vimeoId={vimeoId || undefined}
+            vimeoId={video.vimeoId}
+            youtubeId={video.youtubeId}
+            thumbnailUrl={video.thumbnailUrl}
             title="Silas Shaibu — 3D Visualization Reel"
             rounded="rounded-none sm:rounded-2xl"
           />

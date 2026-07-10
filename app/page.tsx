@@ -36,7 +36,7 @@ export default async function HomePage() {
         />
         <GlowDivider />
         <ShowReel
-          vimeoId={settings.showreel_vimeo_id}
+          videoUrl={settings.showreel_vimeo_id}
           stats={showreelStats}
         />
         <GlowDivider />

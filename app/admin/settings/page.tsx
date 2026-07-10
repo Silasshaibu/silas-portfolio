@@ -165,9 +165,9 @@ export default function AdminSettingsPage() {
 
         {/* ShowReel */}
         <Section title="ShowReel Section">
-          <Field label="Vimeo Video ID">
-            <input value={showreelVimeoId} onChange={e => setShowreelVimeoId(e.target.value)} className={input} placeholder="e.g. 123456789" />
-            <p className="text-xs text-[var(--text-muted)] mt-1">The number at the end of your Vimeo URL: vimeo.com/<strong>123456789</strong></p>
+          <Field label="Video URL (Vimeo or YouTube)">
+            <input value={showreelVimeoId} onChange={e => setShowreelVimeoId(e.target.value)} className={input} placeholder="https://youtube.com/watch?v=... or https://vimeo.com/123456789" />
+            <p className="text-xs text-[var(--text-muted)] mt-1">Paste a full YouTube or Vimeo URL.</p>
           </Field>
           <Field label="Stat Badges">
             <div className="space-y-2">

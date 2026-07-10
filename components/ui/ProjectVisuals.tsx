@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { Maximize2, X } from 'lucide-react';
 import ComparisonSlider from '@/components/ui/ComparisonSlider';
 import VideoEmbed from '@/components/ui/VideoEmbed';
+import { parseVideo } from '@/lib/parseVideo';
 import type { GalleryItem } from '@/types';
 
 interface Props {
@@ -13,14 +14,6 @@ interface Props {
   videoUrl?: string;
   gallery?: GalleryItem[];
   title: string;
-}
-
-function parseVideo(url: string): { vimeoId?: string; youtubeId?: string; thumbnailUrl?: string } {
-  if (/youtu\.?be/.test(url)) {
-    const id = url.match(/(?:v=|youtu\.be\/|embed\/|shorts\/)([\w-]{11})/)?.[1] ?? '';
-    return { youtubeId: id, thumbnailUrl: id ? `https://img.youtube.com/vi/${id}/maxresdefault.jpg` : undefined };
-  }
-  return { vimeoId: url.split('/').pop() ?? '' };
 }
 
 function PlaceholderBox({ label }: { label: string }) {
