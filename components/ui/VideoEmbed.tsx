@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { Play } from 'lucide-react';
 
@@ -14,6 +14,11 @@ interface VideoEmbedProps {
 
 export default function VideoEmbed({ vimeoId, youtubeId, thumbnailUrl, title, rounded = 'rounded-2xl' }: VideoEmbedProps) {
   const [playing, setPlaying] = useState(false);
+  const [thumbSrc, setThumbSrc] = useState(thumbnailUrl);
+
+  useEffect(() => {
+    setThumbSrc(thumbnailUrl);
+  }, [thumbnailUrl]);
 
   const embedSrc = vimeoId
     ? `https://player.vimeo.com/video/${vimeoId}?autoplay=1&color=00d4ff`
@@ -33,13 +38,18 @@ export default function VideoEmbed({ vimeoId, youtubeId, thumbnailUrl, title, ro
         />
       ) : (
         <>
-          {thumbnailUrl && (
+          {thumbSrc && (
             <Image
-              src={thumbnailUrl}
+              src={thumbSrc}
               alt={title ?? 'Video thumbnail'}
               fill
               sizes="(max-width: 1024px) 100vw, 72vw"
               className="object-cover"
+              onError={() => {
+                if (youtubeId && thumbSrc.includes('maxresdefault')) {
+                  setThumbSrc(`https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`);
+                }
+              }}
             />
           )}
           <div className="absolute inset-0 bg-black/40" />
