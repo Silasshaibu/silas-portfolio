@@ -8,10 +8,11 @@ import ProjectCard from '@/components/ui/ProjectCard';
 import ScrollReveal from '@/components/animations/ScrollReveal';
 import type { Project, ProjectCategory } from '@/types';
 
-type FilterCategory = 'all' | ProjectCategory;
+type FilterCategory = 'all' | 'featured' | ProjectCategory;
 
 const tabs: { label: string; value: FilterCategory }[] = [
   { label: 'All', value: 'all' },
+  { label: 'Featured', value: 'featured' },
   { label: 'Industrial & Engineering', value: 'industrial' },
   { label: 'Product Visualization', value: 'product' },
   { label: 'Stylized / Creative', value: 'stylized' },
@@ -23,7 +24,10 @@ export default function ProjectsClient({ projects }: { projects: Project[] }) {
   const tabsRef = useRef<HTMLDivElement>(null);
   const indicatorRef = useRef<HTMLSpanElement>(null);
 
-  const filtered = active === 'all' ? projects : projects.filter((p) => p.category === active);
+  const filtered =
+    active === 'all' ? projects
+    : active === 'featured' ? projects.filter((p) => p.featured)
+    : projects.filter((p) => p.category === active);
 
   const handleTabClick = (value: FilterCategory, el: HTMLButtonElement) => {
     setActive(value);
